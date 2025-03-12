@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,8 +17,7 @@ import me.rogerroca.aichat.model.Message
 @Composable
 fun ChatMessages(messages: List<Message>) {
     LazyColumn {
-        items(messages.size) { index ->
-            val message = messages[index]
+        items(messages) { message ->
             if (message.isUser) {
                 Row(
                     modifier = Modifier

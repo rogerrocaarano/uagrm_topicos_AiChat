@@ -5,18 +5,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import me.rogerroca.aichat.model.Message
 
 @Composable
-fun Chat(padding: PaddingValues, messages: List<Message>) {
+fun Chat(padding: PaddingValues, messages: State<List<Message>>) {
     Column(
         modifier = Modifier.padding(padding)
     ) {
         Box(
             modifier = Modifier.weight(1f)
         ) {
-            ChatMessages(messages)
+            ChatMessages(messages.value)
         }
         ChatPrompt()
     }

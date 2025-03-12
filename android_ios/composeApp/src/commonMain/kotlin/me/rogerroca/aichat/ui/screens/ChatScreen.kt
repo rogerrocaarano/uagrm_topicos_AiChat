@@ -8,7 +8,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import me.rogerroca.aichat.model.messages
+import me.rogerroca.aichat.repositories.MessageRepository
 import me.rogerroca.aichat.ui.components.Chat
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -24,6 +24,6 @@ fun ChatScreen(title: String) {
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { padding ->
-        Chat(padding, messages = messages)
+        Chat(padding, messages = MessageRepository.messages)
     }
 }
