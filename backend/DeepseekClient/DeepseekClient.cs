@@ -24,14 +24,20 @@ public class DeepseekClient : IDisposable
             restRequest.AddHeader("Authorization", "Bearer " + _apiKey);
             restRequest.AddJsonBody(request);
 
-            return await _client.PostAsync<ChatCompletionResponse>(restRequest);
+            Console.WriteLine("Sending request to Deepseek API...");
+            var restResponse = await _client.PostAsync<ChatCompletionResponse>(restRequest);
+            if (restResponse is not null)
+            {
+                Console.WriteLine("Received response from Deepseek API.");
+            }
+
+            return restResponse;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
             return null;
         }
-        
     }
     
     public void Dispose()

@@ -35,6 +35,7 @@ var deepseekClient = new DeepseekClient.DeepseekClient(deepseekApiKey);
 
 app.MapPost("/chat", async (ChatRequest request) =>
 {
+    Console.WriteLine("/chat[POST] :: Received request.");
     if (!request.Messages.Last().IsUserMessage)
     {
         return Results.BadRequest(new ApiResponse("Last message must be from user.", false));
@@ -59,7 +60,8 @@ app.MapPost("/chat", async (ChatRequest request) =>
     {
         return Results.BadRequest(new ApiResponse("An error occurred while processing the request.", false));
     }
-
+    
+    Console.WriteLine("/chat[POST] :: Sending response.");
     return Results.Ok(new ApiResponse(new ChatMessage(response.Choices[0].Message.Content, false), true));
 });
 
