@@ -12,13 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import me.rogerroca.aichat.model.Message
+import me.rogerroca.aichat.data.Message
 
 @Composable
 fun ChatMessages(messages: List<Message>) {
     LazyColumn {
         items(messages) { message ->
-            if (message.isUser) {
+            if (message.isUserMessage) {
                 Row(
                     modifier = Modifier
                         .padding(16.dp)

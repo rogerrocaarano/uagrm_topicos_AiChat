@@ -2,9 +2,10 @@ package me.rogerroca.aichat.repositories
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import kotlinx.coroutines.delay
-import me.rogerroca.aichat.model.ApiResponse
-import me.rogerroca.aichat.model.Message
+import me.rogerroca.aichat.data.ApiResponse
+import me.rogerroca.aichat.data.ChatRequest
+import me.rogerroca.aichat.data.Message
+import me.rogerroca.aichat.services.ApiClient
 
 object MessageRepository {
     private val _messages = mutableStateOf<List<Message>>(emptyList())
@@ -18,17 +19,13 @@ object MessageRepository {
         _messages.value += Message(message, true)
 
 
-        val apiResponse : ApiResponse = sendMessagesToApi()
-        if (apiResponse.isError) {
+        val apiRequest = ChatRequest(_messages.value)
+        val apiResponse : ApiResponse<Message> = ApiClient.postChat(apiRequest)
+        if (!apiResponse.success) {
             _messages.value += Message("Algo sucedió y no pude responderte.", false)
             return
         }
 
-        _messages.value += Message(apiResponse.content, false)
-    }
-
-    private suspend fun sendMessagesToApi() : ApiResponse {
-        delay(3000)
-        return ApiResponse(false, "Hola, soy un mensaje de prueba")
+        _messages.value += Message(apiResponse.data.text, false)
     }
 }

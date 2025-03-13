@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
-import me.rogerroca.aichat.model.Message
+import me.rogerroca.aichat.data.Message
 
 @Composable
 fun Chat(padding: PaddingValues, messages: State<List<Message>>) {
