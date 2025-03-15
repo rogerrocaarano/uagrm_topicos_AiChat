@@ -1,5 +1,8 @@
 name: Build, publish and deploy to MonsterASP.NET
-on: [push]
+on:
+  push:
+    paths:
+      - 'backend/WebApi/**'
 
 jobs:
   build_and_deploy:
