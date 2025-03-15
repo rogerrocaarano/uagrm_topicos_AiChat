@@ -21,7 +21,7 @@ jobs:
         working-directory: backend/WebApi
 
       - name: Publish
-        run: dotnet publish --configuration Release --output ./publish --runtime win-x86 
+        run: dotnet publish --configuration Release --output ../../publish --runtime win-x86
         working-directory: backend/WebApi
 
       - name: Deploy to MonsterASP.NET via WebDeploy
