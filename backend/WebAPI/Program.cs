@@ -50,7 +50,7 @@ app.MapPost("/chat", async (ChatRequest request) =>
     messages.AddRange(request.Messages.Select(message => 
             message.IsUserMessage ? 
                 new Message("user", message.Text) : 
-                new Message("system", message.Text))
+                new Message("assistant", message.Text))
     );
     
     var completionRequest = new ChatCompletionRequest(messages);
