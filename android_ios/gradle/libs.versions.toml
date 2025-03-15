@@ -15,6 +15,7 @@ compose-multiplatform = "1.7.0"
 junit = "4.13.2"
 kotlin = "2.1.0"
 ktor = "2.3.11"
+markdown-renderer = "0.31.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -34,6 +35,8 @@ ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.r
 ktor-client-darwin = { group = "io.ktor", name = "ktor-client-ios", version.ref = "ktor" }
 ktor-client-contentnegotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-serialization-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+markdown-renderer = { group = "com.mikepenz", name = "multiplatform-markdown-renderer", version.ref = "markdown-renderer" }
+markdown-renderer-m3 = { group = "com.mikepenz", name = "multiplatform-markdown-renderer-m3", version.ref = "markdown-renderer" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -30,6 +30,9 @@ kotlin {
     }
     
     sourceSets {
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
+        }
         
         androidMain.dependencies {
             implementation(compose.preview)
@@ -48,6 +51,8 @@ kotlin {
             implementation(libs.ktor.client.contentnegotiation)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.serialization.json)
+            implementation(libs.markdown.renderer)
+            implementation(libs.markdown.renderer.m3)
         }
     }
 

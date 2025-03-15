@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.mikepenz.markdown.m3.Markdown
 import me.rogerroca.aichat.data.Message
 
 @Composable
@@ -37,7 +38,7 @@ fun ChatMessages(messages: List<Message>) {
                     )
                 }
             } else {
-                Text(
+                Markdown(
                     message.text,
                     modifier = Modifier.padding(16.dp)
                 )
