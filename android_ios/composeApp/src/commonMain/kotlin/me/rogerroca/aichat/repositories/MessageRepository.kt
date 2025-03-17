@@ -15,6 +15,10 @@ object MessageRepository {
         return _messages.value
     }
 
+    fun clearMessages() {
+        _messages.value = emptyList()
+    }
+
     suspend fun addUserMessage(message: String) {
         _messages.value += Message(message, true)
 
