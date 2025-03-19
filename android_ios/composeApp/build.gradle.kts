@@ -53,6 +53,7 @@ kotlin {
             implementation(libs.ktor.serialization.json)
             implementation(libs.markdown.renderer)
             implementation(libs.markdown.renderer.m3)
+            implementation(compose.materialIconsExtended)
         }
     }
 

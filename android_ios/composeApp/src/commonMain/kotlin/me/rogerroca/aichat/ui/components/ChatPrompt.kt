@@ -23,7 +23,9 @@ import me.rogerroca.aichat.repositories.MessageRepository
 
 @Composable
 fun ChatPrompt() {
-    var input by remember { mutableStateOf(TextFieldValue("")) }
+    var userPrompt by remember { mutableStateOf(TextFieldValue("")) }
+    var userIsSpeeching by remember { mutableStateOf(false) }
+    var userIsWriting by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -32,25 +34,32 @@ fun ChatPrompt() {
         modifier = Modifier.padding(16.dp)
     ) {
         TextField(
-            value = input,
-            onValueChange = { input = it },
+            value = userPrompt,
+            onValueChange = {
+                userPrompt = it
+                userIsWriting = it.text.isNotEmpty()
+            },
             modifier = Modifier.weight(1f)
         )
         Spacer(
             modifier = Modifier.width(8.dp)
         )
-        Button(
-            onClick = {
-                if (input.text.isNotEmpty()) {
-                    val promptText = input.text
+
+        if (userIsWriting) {
+            Button(
+                onClick = {
+                    val promptText = userPrompt.text
                     coroutineScope.launch { MessageRepository.addUserMessage(promptText) }
-                    input = TextFieldValue("")
+                    userPrompt = TextFieldValue("")
                     keyboardController?.hide()
                     focusManager.clearFocus()
                 }
+            ) {
+                Text("Send")
             }
-        ) {
-            Text("Send")
+        } else {
+            RecordButton(userPrompt)
         }
     }
 }
+
