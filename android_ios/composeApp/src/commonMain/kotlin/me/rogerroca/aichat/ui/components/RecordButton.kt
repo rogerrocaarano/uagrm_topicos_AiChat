@@ -8,8 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.input.TextFieldValue
 
 @Composable
-fun RecordButton(input : TextFieldValue) {
-    IconButton(onClick = { /*TODO*/ }) {
+fun RecordButton(onResult: (String) -> Unit) {
+    IconButton(onClick = {
+        onResult("Hola")
+    }) {
         Icon(
             imageVector = Icons.Filled.Mic,
             contentDescription = "Record"

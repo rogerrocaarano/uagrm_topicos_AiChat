@@ -51,6 +51,7 @@ fun ChatPrompt() {
                     val promptText = userPrompt.text
                     coroutineScope.launch { MessageRepository.addUserMessage(promptText) }
                     userPrompt = TextFieldValue("")
+                    userIsWriting = false
                     keyboardController?.hide()
                     focusManager.clearFocus()
                 }
@@ -58,7 +59,9 @@ fun ChatPrompt() {
                 Text("Send")
             }
         } else {
-            RecordButton(userPrompt)
+            RecordButton(onResult = { recordedText ->
+                coroutineScope.launch { MessageRepository.addUserMessage(recordedText) }
+            })
         }
     }
 }
