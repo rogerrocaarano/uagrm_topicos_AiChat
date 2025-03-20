@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import me.rogerroca.aichat.repositories.MessageRepository
+import me.rogerroca.aichat.utils.getPlatform
 import me.rogerroca.aichat.ui.components.Chat
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,7 +50,7 @@ fun ChatScreen(title: String) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(title) },
+                title = { Text(title + " ${getPlatform().name}") },
                 actions = {
                     IconButton(onClick = { showDiscardChatConfirmation.value = true }) {
                         Icon(
