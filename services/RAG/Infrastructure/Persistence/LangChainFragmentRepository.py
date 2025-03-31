@@ -6,7 +6,7 @@ from torch.nn.functional import embedding
 from Domain.Model.MetaTag import MetaTag
 from Domain.Model.SimilarityResult import SimilarityResult
 from Domain.Repository.IFragmentRepository import IFragmentRepository
-from langchain.vectorstores import Chroma
+from langchain_community.vectorstores import Chroma
 from langchain.embeddings.base import Embeddings
 
 
