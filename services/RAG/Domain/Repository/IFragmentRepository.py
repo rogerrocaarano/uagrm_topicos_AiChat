@@ -14,7 +14,7 @@ class IFragmentRepository(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_best_mach(self, text: str, tags: list[MetaTag]) -> SimilarityResult:
+    def get_best_match(self, text: str, tags: list[MetaTag]) -> SimilarityResult | None:
         raise NotImplementedError
 
     @abc.abstractmethod

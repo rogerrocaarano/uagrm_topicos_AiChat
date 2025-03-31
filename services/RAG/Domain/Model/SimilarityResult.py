@@ -1,16 +1,14 @@
 import uuid
 
+from pydantic import BaseModel
+
 from Domain.Model.MetaTag import MetaTag
 
 
 # -*- coding: utf-8 -*-
 
-class SimilarityResult:
+class SimilarityResult(BaseModel):
     fragmentId: uuid
-    score: int
+    score: float
     tags: list[MetaTag]
 
-    def __init__(self):
-        self.fragmentId = None
-        self.score = 0
-        self.tags = []

@@ -22,38 +22,16 @@ class LangChainFragmentRepository(IFragmentRepository):
         )
 
     def add(self, content: str, tags: list[MetaTag]) -> uuid:
-        generated_embedding = self.__embedding_function.embed_query(content)
-        doc_id = str(uuid.uuid4())
-        metadata = {tag.key: tag.value for tag in tags}
-        self.__vector_store._collection.add(
-            embeddings=[embedding],
-            ids=[doc_id],
-            metadatas=[metadata]
-        )
-        return uuid.UUID(doc_id)
+        pass
 
-    def get_best_mach(self, text: str, tags: list[MetaTag]) -> SimilarityResult | None:
-        # Generar embedding de la consulta
-        query_embedding = self.__embedding_function.embed_query(text)
-
-        # Filtrar por tags si es necesario
-        filter = {"tags": {"$in": [tag.name for tag in tags]}} if tags else None
-
-        # Buscar en Chroma
-        results = self.__vector_store._collection.query(
-            query_embeddings=[query_embedding],
-            n_results=1,
-            where=filter
-        )
-
-        if not results['ids'][0]:
-            return None
-
-        # Reconstruir el resultado
-        result = SimilarityResult()
-        result.fragmentId = results['ids'][0]
-        result.score = results['distances'][0]
-        return result
+    def get_best_match(self, text: str, tags: list[MetaTag]) -> SimilarityResult | None:
+        pass
 
     def get_approximate_matches(self, text: str, tags: list[MetaTag], max_matches: int) -> list[SimilarityResult]:
         pass
+
+    @staticmethod
+    def __tags_to_dict(tags: list[MetaTag]) -> dict | None:
+        if not tags:
+            return None
+        return {tag.key: tag.value for tag in tags}

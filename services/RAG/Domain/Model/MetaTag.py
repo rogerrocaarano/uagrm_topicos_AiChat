@@ -1,10 +1,8 @@
+from pydantic.v1 import BaseModel
+
 
 # -*- coding: utf-8 -*-
 
-class MetaTag:
+class MetaTag(BaseModel):
     key: str
     value: str
-
-    def __init__(self):
-        self.key = ""
-        self.value = ""
