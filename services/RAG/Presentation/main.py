@@ -4,7 +4,7 @@ from fastapi import FastAPI
 
 from Application.UseCase.SearchBySimilarity import SearchBySimilarity
 from Application.UseCase.StoreDocumentFragment import StoreDocumentFragment
-from Presentation.di.Container import Container
+from Infrastructure.di.Container import Container
 from Domain.Model.ApiResponse import ApiResponse
 from Presentation.Documents.PostFragmentCompare import PostFragmentCompare
 from Presentation.Documents.PostFragmentIngest import PostFragmentIngest

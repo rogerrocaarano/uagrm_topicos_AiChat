@@ -4,4 +4,7 @@ from Infrastructure.Persistence.ChromaDbFragmentRepository import ChromaDbFragme
 
 
 class Container(containers.DeclarativeContainer):
-    fragments_repository = providers.Singleton(ChromaDbFragmentRepository)
+    fragments_repository = providers.Singleton(
+        ChromaDbFragmentRepository,
+        collection_name="ingested_docs"
+    )

@@ -1,12 +1,10 @@
-import uuid
+from uuid import UUID
+
+from pydantic import BaseModel
 
 
 # -*- coding: utf-8 -*-
 
-class FragmentDto:
-    id: uuid
+class FragmentDto(BaseModel):
+    id: UUID
     collection: str
-
-    def __init__(self):
-        self.id = None
-        self.collection = ""
