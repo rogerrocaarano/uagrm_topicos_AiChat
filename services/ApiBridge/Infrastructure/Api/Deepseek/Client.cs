@@ -1,14 +1,14 @@
-using DeepseekClient.Models;
+using Infrastructure.Api.Deepseek.Models;
 using RestSharp;
 
-namespace DeepseekClient;
+namespace Infrastructure.Api.Deepseek;
 
-public class DeepseekClient : IDisposable
+public class Client : IDisposable
 {
     private RestClient _client;
     private readonly string _apiKey;
 
-    public DeepseekClient(string apiKey)
+    public Client(string apiKey)
     {
         var options = new RestClientOptions("https://api.deepseek.com/");
         _client = new RestClient(options);
