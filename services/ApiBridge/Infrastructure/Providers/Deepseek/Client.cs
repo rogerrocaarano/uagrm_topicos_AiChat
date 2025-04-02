@@ -1,7 +1,8 @@
 using Infrastructure.Api.Deepseek.Models;
+using Infrastructure.Providers.Deepseek.Models;
 using RestSharp;
 
-namespace Infrastructure.Api.Deepseek;
+namespace Infrastructure.Providers.Deepseek;
 
 public class Client : IDisposable
 {

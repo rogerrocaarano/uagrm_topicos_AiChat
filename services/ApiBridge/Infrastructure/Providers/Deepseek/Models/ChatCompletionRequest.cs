@@ -1,4 +1,4 @@
-namespace Infrastructure.Api.Deepseek.Models;
+namespace Infrastructure.Providers.Deepseek.Models;
 
 public record ChatCompletionRequest(
     List<Message> Messages,

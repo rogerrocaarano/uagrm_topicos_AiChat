@@ -1,4 +1,6 @@
 using Infrastructure.Api.Deepseek.Models;
+using Infrastructure.Providers.Deepseek;
+using Infrastructure.Providers.Deepseek.Models;
 using Presentation.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,7 +32,7 @@ if (string.IsNullOrEmpty(deepseekApiKey))
     throw new Exception("Missing Deepseek__ApiKey configuration.");
 }
 
-var deepseekClient = new Infrastructure.Api.Deepseek.Client(deepseekApiKey);
+var deepseekClient = new Client(deepseekApiKey);
 
 
 app.MapPost("/chat", async (ChatRequest request) =>
