@@ -1,12 +1,10 @@
-from uuid import UUID
-
 from pydantic import BaseModel
 
 
 # -*- coding: utf-8 -*-
 
 class Fragment(BaseModel):
-    id: UUID
+    id: str
     content: str
     collection: str
 
