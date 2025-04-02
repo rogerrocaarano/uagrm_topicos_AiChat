@@ -4,16 +4,20 @@ import hashlib
 from chromadb import QueryResult
 from sentence_transformers import SentenceTransformer
 
-from Domain.Entity.Fragment import Fragment
 from Domain.Model.MetaTag import MetaTag
 from Domain.Model.SimilarityResult import SimilarityResult
 from Domain.Repository.IFragmentRepository import IFragmentRepository
 
 
 class ChromaDbFragmentRepository(IFragmentRepository):
-    def __init__(self, collection_name: str):
-        self.__embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
-        self.__chroma_client = chromadb.PersistentClient()
+    def __init__(
+            self,
+            collection_name: str,
+            persistence_path: str,
+            embedding_model: str
+    ):
+        self.__embedding_model = SentenceTransformer(embedding_model)
+        self.__chroma_client = chromadb.PersistentClient(persistence_path)
         self.__collection = self.__chroma_client.get_or_create_collection(name=collection_name)
 
     def add(self, content: str, tags: list[MetaTag]) -> str:
