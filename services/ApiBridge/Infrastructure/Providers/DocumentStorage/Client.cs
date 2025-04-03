@@ -33,4 +33,9 @@ public class Client : IDocumentsRepository
     {
         throw new NotImplementedException();
     }
+
+    public Task SetVectorId(Guid fragmentId, Guid vectorId)
+    {
+        throw new NotImplementedException();
+    }
 }
