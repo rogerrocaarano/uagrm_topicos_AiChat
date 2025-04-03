@@ -46,24 +46,38 @@ class ChromaDbFragmentRepository(IFragmentRepository):
         return fragment_id
 
     def get_best_match(self, text: str, tags: list[MetaTag]) -> SimilarityResult | None:
+        return self.get_approximate_matches(text, tags, 1)[0] \
+            if self.get_approximate_matches(text, tags, 1) else None
+
+    def get_approximate_matches(self,
+                                text: str,
+                                tags: list[MetaTag] = None,
+                                max_matches: int = 30) -> list[SimilarityResult]:
         embeddings = self.__embedding_model.encode(text)
         tags_dict = self.__tags_to_dict(tags)
         results: QueryResult = self.__collection.query(
             query_embeddings=embeddings,
-            n_results=1,
+            n_results=max_matches,
             where=tags_dict)
+        return self.__build_similarity_result(results)
 
-        if not results or not results.get('ids'):
-            return None
-
-        return SimilarityResult(
-            fragmentId=uuid.UUID(results.get('ids')[0][0]),
-            score=results.get('distances')[0][0],
-            tags=[MetaTag(key=k, value=v) for k, v in results.get('metadatas')[0]]
-        )
-
-    def get_approximate_matches(self, text: str, tags: list[MetaTag], max_matches: int) -> list[SimilarityResult]:
-        pass
+    @staticmethod
+    def __build_similarity_result(results: QueryResult) -> list[SimilarityResult]:
+        """
+        Converts the results from the query into a list of SimilarityResult objects.
+        :param results: QueryResult: The results from the query.
+        :return: list[SimilarityResult]: A list of SimilarityResult objects.
+        """
+        similarity_results: list[SimilarityResult] = []
+        for i in range(len(results["ids"])):
+            similarity_results.append(
+                SimilarityResult(
+                    fragmentId=uuid.UUID(results.get("ids")[i][0]),
+                    score=results.get("distances")[i][0],
+                    tags=[MetaTag(key=k, value=v) for k, v in results["metadatas"][i]]
+                )
+            )
+        return similarity_results
 
     @staticmethod
     def __tags_to_dict(tags: list[MetaTag]) -> dict | None:
