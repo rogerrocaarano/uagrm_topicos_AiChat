@@ -1,10 +1,12 @@
+using Domain.Model;
+using Domain.Service;
 using Infrastructure.Api.Deepseek.Models;
 using Infrastructure.Providers.Deepseek.Models;
 using RestSharp;
 
 namespace Infrastructure.Providers.Deepseek;
 
-public class Client : IDisposable
+public class Client : IDisposable, ILlmChat
 {
     private RestClient _client;
     private readonly string _apiKey;
@@ -45,5 +47,10 @@ public class Client : IDisposable
     {
         _client?.Dispose();
         GC.SuppressFinalize(this);
+    }
+
+    public Task<string> AskLlmChat(Conversation conversation)
+    {
+        throw new NotImplementedException();
     }
 }
