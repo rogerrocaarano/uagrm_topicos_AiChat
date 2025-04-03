@@ -1,0 +1,228 @@
+﻿using Microsoft.EntityFrameworkCore;
+using PuebaTopicosSpacy.Data;
+using PuebaTopicosSpacy.Models;
+using System.Diagnostics;
+using Newtonsoft.Json;
+using PuebaTopicosSpacy.Controllers;
+
+namespace PuebaTopicosSpacy.Services
+{
+    public class DocumentService
+    {
+        private readonly AppDbContext _context;
+
+        public DocumentService(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        private readonly string _pythonPath = @"C:\Python311\python.exe";
+        private readonly string _scriptPath = @"C:\Users\Nathalia\Desktop\PythonProcessor\process_txt.py";
+
+        public async Task<List<DocumentJsonModel>> ProcesarArchivosTxtAsync()
+        {
+            try
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = _pythonPath,
+                    Arguments = $"\"{_scriptPath}\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+
+                using (var process = new Process { StartInfo = psi })
+                {
+                    process.Start();
+
+                    string output = await process.StandardOutput.ReadToEndAsync();
+                    string error = await process.StandardError.ReadToEndAsync();
+
+                    await process.WaitForExitAsync();
+
+                    if (!string.IsNullOrEmpty(error))
+                    {
+                        throw new Exception($"Error al ejecutar Python: {error}");
+                    }
+
+                    string jsonPath = Path.Combine(Directory.GetCurrentDirectory(), "output.json");
+                    if (!File.Exists(jsonPath))
+                    {
+                        throw new FileNotFoundException("No se encontró el archivo JSON generado.");
+                    }
+
+                    string jsonData = await File.ReadAllTextAsync(jsonPath);
+
+                    var documentosProcesados = JsonConvert.DeserializeObject<List<DocumentJsonModel>>(jsonData);
+
+                    if (documentosProcesados == null || documentosProcesados.Count == 0)
+                    {
+                        throw new Exception("La deserialización devolvió null o una lista vacía.");
+                    }
+
+                    return documentosProcesados;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error en ProcesarArchivosTxtAsync: {ex.Message}");
+            }
+        }
+
+        //public async Task GuardarDocumentosEnBD(List<DocumentJsonModel> documentos)
+        //{
+        //    foreach (var doc in documentos)
+        //    {
+        //        var documento = new Document
+        //        {
+        //            Id = Guid.Parse(doc.Document.Id),
+        //            Name = doc.Document.Name,
+        //            Description = doc.Document.Description,
+        //            UploadDateTime = DateTime.Parse(doc.Document.UploadDateTime)
+
+        //    };
+
+        //        _context.Documents.Add(documento);
+        //        await _context.SaveChangesAsync(); 
+
+        //        foreach (var frag in doc.Fragments)
+        //        {
+        //            var fragmento = new Fragment
+        //            {
+        //                Id = Guid.Parse(frag.Id),
+        //                VectorId = null,
+        //                Content = frag.Content,
+        //                DocumentId = documento.Id,
+        //                SequenceId = frag.SequenceId
+        //            };
+
+        //            _context.Fragments.Add(fragmento);
+        //        }
+        //    }
+
+        //    await _context.SaveChangesAsync();
+        //}
+
+        public async Task GuardarDocumentosEnBD(List<DocumentJsonModel> documentos)
+        {
+            foreach (var doc in documentos)
+            {
+                DateTime uploadDateTime;
+                if (!DateTime.TryParse(doc.Document.UploadDateTime, null, System.Globalization.DateTimeStyles.RoundtripKind, out uploadDateTime))
+                {
+                    throw new Exception($"La fecha de carga no es válida: {doc.Document.UploadDateTime}");
+                }
+
+                if (uploadDateTime.Kind == DateTimeKind.Unspecified)
+                {
+                    uploadDateTime = DateTime.SpecifyKind(uploadDateTime, DateTimeKind.Utc);
+                }
+
+                var documento = new Document
+                {
+                    Id = Guid.Parse(doc.Document.Id),
+                    Name = doc.Document.Name,
+                    Description = doc.Document.Description,
+                    UploadDateTime = uploadDateTime 
+                };
+
+                _context.Documents.Add(documento);
+                await _context.SaveChangesAsync();
+
+                foreach (var frag in doc.Fragments)
+                {
+                    var fragmento = new Fragment
+                    {
+                        Id = Guid.Parse(frag.Id),
+                        VectorId = null,
+                        Content = frag.Content,
+                        DocumentId = documento.Id,
+                        SequenceId = frag.SequenceId
+                    };
+
+                    _context.Fragments.Add(fragmento);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<DocumentJsonModel>> GetAllDocumentsAsync()
+        {
+            return await _context.Documents
+                .Select(doc => new DocumentJsonModel
+                {
+                    Document = new DocumentData
+                    {
+                        Id = doc.Id.ToString(),
+                        Name = doc.Name,
+                        Description = doc.Description,
+                        UploadDateTime = doc.UploadDateTime.ToString()
+                    },
+                    Fragments = doc.Fragments.Select(frag => new FragmentJsonModel
+                    {
+                        Id = frag.Id.ToString(),
+                        VectorId = frag.VectorId.ToString(),
+                        Content = frag.Content,
+                        DocumentId = frag.DocumentId.ToString(),
+                        SequenceId = frag.SequenceId
+                    }).ToList()
+                }).ToListAsync();
+        }
+
+        public async Task<DocumentJsonModel> GetDocumentByIdAsync(string documentId)
+        {
+            return await _context.Documents
+                .Where(doc => doc.Id.ToString() == documentId)
+                .Select(doc => new DocumentJsonModel
+                {
+                    Document = new DocumentData
+                    {
+                        Id = doc.Id.ToString(),
+                        Name = doc.Name,
+                        Description = doc.Description,
+                        UploadDateTime = doc.UploadDateTime.ToString()
+                    },
+                    Fragments = doc.Fragments.Select(frag => new FragmentJsonModel
+                    {
+                        Id = frag.Id.ToString(),
+                        VectorId = frag.VectorId.ToString(),
+                        Content = frag.Content,
+                        DocumentId = frag.DocumentId.ToString(),
+                        SequenceId = frag.SequenceId
+                    }).ToList()
+                }).FirstOrDefaultAsync();
+        }
+
+        public async Task<FragmentJsonModel> GetFragmentByIdAsync(string fragmentId)
+        {
+            return await _context.Fragments
+                .Where(frag => frag.Id.ToString() == fragmentId)
+                .Select(frag => new FragmentJsonModel
+                {
+                    Id = frag.Id.ToString(),
+                    VectorId = frag.VectorId.ToString(),
+                    Content = frag.Content,
+                    DocumentId = frag.DocumentId.ToString(),
+                    SequenceId = frag.SequenceId
+                }).FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> UpdateFragmentVectorIdAsync(string fragmentId, string vectorId)
+        {
+            var fragment = await _context.Fragments.FindAsync(Guid.Parse(fragmentId));
+            if (fragment == null)
+            {
+                return false;
+            }
+
+            fragment.VectorId = Guid.Parse(vectorId);
+
+            await _context.SaveChangesAsync();
+            return true; 
+        
+        }
+    }
+}
