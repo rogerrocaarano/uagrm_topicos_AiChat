@@ -1,10 +1,10 @@
-﻿using PuebaTopicosSpacy.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection.Emit;
+using DocumentStorage.Models;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace PuebaTopicosSpacy.Data
+namespace DocumentStorage.Data
 {
     public class AppDbContext : DbContext
     {

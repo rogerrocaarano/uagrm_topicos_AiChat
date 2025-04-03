@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace PuebaTopicosSpacy.Migrations
+namespace DocumentStorage.Migrations
 {
     public partial class InitialCreate : Migration
     {

@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PuebaTopicosSpacy.Data;
-using PuebaTopicosSpacy.Models;
 using System.Diagnostics;
+using DocumentStorage.Data;
+using DocumentStorage.Models;
 using Newtonsoft.Json;
-using PuebaTopicosSpacy.Controllers;
+using DocumentStorage.Controllers;
 
-namespace PuebaTopicosSpacy.Services
+namespace DocumentStorage.Services
 {
     public class DocumentService
     {

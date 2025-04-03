@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PuebaTopicosSpacy.Models;
 using System.Diagnostics;
+using DocumentStorage.Models;
 
-namespace PuebaTopicosSpacy.Controllers
+namespace DocumentStorage.Controllers
 {
     public class HomeController : Controller
     {

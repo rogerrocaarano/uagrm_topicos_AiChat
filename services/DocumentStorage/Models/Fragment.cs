@@ -1,4 +1,4 @@
-﻿namespace PuebaTopicosSpacy.Models
+﻿namespace DocumentStorage.Models
 {
     public class Fragment
     {
