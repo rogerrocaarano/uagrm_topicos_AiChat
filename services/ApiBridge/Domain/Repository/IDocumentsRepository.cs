@@ -29,4 +29,17 @@ public interface IDocumentsRepository
     /// <param name="embeddedIds">List of fragment's identifiers.</param>
     /// <returns>List of fragment's texts.</returns>
     Task<List<string>> GetFragmentsByEmbeddedIds(List<Guid> embeddedIds);
+    
+    /// <summary>
+    /// Gets a List of all the documents stored in the database.
+    /// </summary>
+    /// <returns>List of Document's unique IDs.</returns>
+    Task<List<Guid>> GetAllDocumentIds();
+    
+    /// <summary>
+    /// Gets all the fragments of a document by its unique identifier.
+    /// </summary>
+    /// <param name="documentId">The document's unique ID.</param>
+    /// <returns>List of fragments of the document.</returns>
+    Task<List<string>> GetDocumentFragments(Guid documentId);
 }

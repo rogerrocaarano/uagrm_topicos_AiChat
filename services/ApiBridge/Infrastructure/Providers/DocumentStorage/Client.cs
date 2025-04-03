@@ -23,4 +23,14 @@ public class Client : IDocumentsRepository
     {
         throw new NotImplementedException();
     }
+
+    public Task<List<Guid>> GetAllDocumentIds()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<List<string>> GetDocumentFragments(Guid documentId)
+    {
+        throw new NotImplementedException();
+    }
 }
