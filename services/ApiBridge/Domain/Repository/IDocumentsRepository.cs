@@ -43,6 +43,9 @@ public interface IDocumentsRepository
     /// <returns>List of fragments of the document.</returns>
     Task<List<string>> GetDocumentFragments(Guid documentId);
     
+    
+    Task<List<Guid>> GetDocumentFragmentIds(Guid documentId);
+    
     /// <summary>
     /// Set the vector ID for a fragment.
     /// </summary>
