@@ -16,8 +16,12 @@ namespace DocumentStorage.Services
             _context = context;
         }
 
-        private readonly string _pythonPath = @"C:\Python311\python.exe";
-        private readonly string _scriptPath = @"C:\Users\Nathalia\Desktop\PythonProcessor\process_txt.py";
+        // private readonly string _pythonPath = @"C:\Python311\python.exe";
+        // private readonly string _scriptPath = @"C:\Users\Nathalia\Desktop\PythonProcessor\process_txt.py";
+        
+        private readonly string _pythonPath = Environment.GetEnvironmentVariable("PYTHON_PATH") ?? "python";
+        private readonly string _scriptPath = Path.Combine(Directory.GetCurrentDirectory(), "utilities", "process_text.py");
+
 
         public async Task<List<DocumentJsonModel>> ProcesarArchivosTxtAsync()
         {
@@ -210,19 +214,18 @@ namespace DocumentStorage.Services
                 }).FirstOrDefaultAsync();
         }
 
-        public async Task<bool> UpdateFragmentVectorIdAsync(string fragmentId, string vectorId)
+        
+        public async Task<bool> SetVectorIdAsync(Guid fragmentId, Guid vectorId)
         {
-            var fragment = await _context.Fragments.FindAsync(Guid.Parse(fragmentId));
+            var fragment = await _context.Fragments.FindAsync(fragmentId);
             if (fragment == null)
             {
                 return false;
             }
 
-            fragment.VectorId = Guid.Parse(vectorId);
-
+            fragment.VectorId = vectorId;
             await _context.SaveChangesAsync();
-            return true; 
-        
+            return true;
         }
     }
 }
