@@ -42,4 +42,14 @@ public interface IDocumentsRepository
     /// <param name="documentId">The document's unique ID.</param>
     /// <returns>List of fragments of the document.</returns>
     Task<List<string>> GetDocumentFragments(Guid documentId);
+    
+    
+    Task<List<Guid>> GetDocumentFragmentIds(Guid documentId);
+    
+    /// <summary>
+    /// Set the vector ID for a fragment.
+    /// </summary>
+    /// <param name="fragmentId">Fragment unique ID on DocumentsRepository.</param>
+    /// <param name="vectorId">Vector unique ID on EmbeddingRepository.</param>
+    Task SetVectorId(Guid fragmentId, Guid vectorId);
 }

@@ -18,5 +18,8 @@ class IFragmentRepository(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_approximate_matches(self, text: str, tags: list[MetaTag], max_matches: int) -> list[SimilarityResult]:
+    def get_approximate_matches(self,
+                                text: str,
+                                tags: list[MetaTag] = None,
+                                max_matches: int = 30) -> list[SimilarityResult]:
         raise NotImplementedError

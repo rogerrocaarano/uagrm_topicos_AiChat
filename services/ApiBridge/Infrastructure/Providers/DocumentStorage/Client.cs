@@ -1,36 +1,58 @@
+using System.Net.Http.Json;
 using Domain.Repository;
 
 namespace Infrastructure.Providers.DocumentStorage;
 
-public class Client : IDocumentsRepository
+public class Client(string baseUrl) : IDocumentsRepository
 {
-    public Task<string> GetFragment(Guid id)
+    private readonly HttpClient _httpClient = new()
     {
-        throw new NotImplementedException();
+        BaseAddress = new Uri(baseUrl)
+    };
+
+    public async Task<string> GetFragment(Guid id)
+    {
+        return await _httpClient.GetFromJsonAsync<string>($"api/documents/GetFragmentById?fragmentId={id}");
     }
 
-    public Task<List<string>> GetFragments(List<Guid> ids)
+    public async Task<List<string>> GetFragments(List<Guid> ids)
     {
-        throw new NotImplementedException();
+        var response = await _httpClient.PostAsJsonAsync("api/documents/GetFragmentsByIds", ids);
+        return await response.Content.ReadFromJsonAsync<List<string>>();
     }
 
-    public Task<string> GetFragmentByEmbeddedId(Guid embeddedId)
+    public async Task<string> GetFragmentByEmbeddedId(Guid embeddedId)
     {
-        throw new NotImplementedException();
-    }
-    
-    public Task<List<string>> GetFragmentsByEmbeddedIds(List<Guid> embeddedIds)
-    {
-        throw new NotImplementedException();
+        return await _httpClient.GetFromJsonAsync<string>(
+            $"api/documents/GetFragmentByEmbeddedId?embeddedId={embeddedId}");
     }
 
-    public Task<List<Guid>> GetAllDocumentIds()
+    public async Task<List<string>> GetFragmentsByEmbeddedIds(List<Guid> embeddedIds)
     {
-        throw new NotImplementedException();
+        var response = await _httpClient.PostAsJsonAsync("api/documents/GetFragmentsByEmbeddedIds", embeddedIds);
+        return await response.Content.ReadFromJsonAsync<List<string>>();
     }
 
-    public Task<List<string>> GetDocumentFragments(Guid documentId)
+    public async Task<List<Guid>> GetAllDocumentIds()
     {
-        throw new NotImplementedException();
+        return await _httpClient.GetFromJsonAsync<List<Guid>>("api/documents/GetAllDocuments");
+    }
+
+    public async Task<List<string>> GetDocumentFragments(Guid documentId)
+    {
+        return await _httpClient.GetFromJsonAsync<List<string>>(
+            $"api/documents/GetDocumentById?documentId={documentId}");
+    }
+
+    public async Task<List<Guid>> GetDocumentFragmentIds(Guid documentId)
+    {
+        return await _httpClient.GetFromJsonAsync<List<Guid>>(
+            $"api/documents/GetDocumentFragmentIds?documentId={documentId}");
+    }
+
+    public async Task SetVectorId(Guid fragmentId, Guid vectorId)
+    {
+        var response =
+            await _httpClient.PostAsync($"api/documents/SetVectorId?fragmentId={fragmentId}&vectorId={vectorId}", null);
     }
 }
