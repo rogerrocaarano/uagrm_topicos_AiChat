@@ -1,9 +1,9 @@
 namespace Domain.Model;
 
-public record Message(
-    string Type,
-    string Content
-)
+public class Message
 {
-    public DateTime TimeSend { get; private set; } = DateTime.UtcNow;
-}
+    public required string Type { get; set; }
+    public required string Text { get; set; }
+    public DateTime? SendTime { get; set; }
+    public List<Guid> ContextDbIds { get; set; } = [];
+};

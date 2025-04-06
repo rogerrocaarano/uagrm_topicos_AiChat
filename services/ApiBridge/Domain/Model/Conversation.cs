@@ -2,21 +2,24 @@ namespace Domain.Model;
 
 public class Conversation
 {
-    public List<Message> UserQuestions { get; private set; }
-    public List<Message> LlmResponses { get; private set; }
-    public List<Message> ContextMessages { get; private set; }
+    public List<(Message, Message)> AnsweredQuestions { get; private set; }
+    public Message? Question { get; set; }
     public Message Rules { get; private set; }
-    
 
-    public Conversation(List<Message> userQuestions, List<Message> llmResponses, List<Message> contextMessages)
+    public Conversation(List<(Message, Message)>? answeredQuestions, Message userQuestion)
     {
-        UserQuestions = userQuestions;
-        LlmResponses = llmResponses;
-        ContextMessages = contextMessages;
-        Rules = DefaultRules();
+        AnsweredQuestions = answeredQuestions ?? new List<(Message, Message)>();
+        Question = userQuestion;
+        Rules = BuildRules();
+    }
+    
+    public void AnswerQuestion(Message answer)
+    {
+        AnsweredQuestions.Add((Question, answer));
+        Question = null;
     }
 
-    private Message DefaultRules()
+    private Message BuildRules()
     {
         var rules = new List<string>
         {
@@ -30,9 +33,10 @@ public class Conversation
             "Limitaciones: No respondas preguntas que no estén relacionadas con el contexto."
         };
 
-        return new Message(
-            Type: "context-message",
-            Content: string.Join(", ", rules)
-        );
+        return new Message
+        {
+            Type = "context-message",
+            Text = string.Join(", ", rules)
+        };
     }
 }
