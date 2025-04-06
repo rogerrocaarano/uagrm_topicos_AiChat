@@ -1,14 +1,16 @@
 using Domain.Model;
 using Domain.Service;
 using Infrastructure.Api.Deepseek.Models;
+using Infrastructure.Providers.Deepseek.Builder;
 using Infrastructure.Providers.Deepseek.Models;
 using RestSharp;
+using Message = Domain.Model.Message;
 
 namespace Infrastructure.Providers.Deepseek;
 
 public class Client : IDisposable, ILlmChat
 {
-    private RestClient _client;
+    private readonly RestClient _client;
     private readonly string _apiKey;
 
     public Client(string apiKey)
@@ -17,7 +19,7 @@ public class Client : IDisposable, ILlmChat
         _client = new RestClient(options);
         _apiKey = apiKey;
     }
-    
+
     public async Task<ChatCompletionResponse?> PostCompletionChat(ChatCompletionRequest request)
     {
         try
@@ -42,15 +44,17 @@ public class Client : IDisposable, ILlmChat
             return null;
         }
     }
-    
+
     public void Dispose()
     {
         _client?.Dispose();
         GC.SuppressFinalize(this);
     }
 
-    public Task<string> AskLlmChat(Conversation conversation)
+    public async Task<string> AskLlmChat(Conversation conversation, List<Message> context)
     {
-        throw new NotImplementedException();
+        var request = ChatCompletionBuilder.BuildRequest(conversation, context);
+        var response = await PostCompletionChat(request);
+        return response.Choices[0].Message.Content;
     }
 }
