@@ -1,3 +1,4 @@
+using Domain.Constants;
 using Domain.Model;
 using Domain.Repository;
 using Domain.Service;
@@ -24,7 +25,7 @@ public class AskLlm(ILlmChat llm, IDocumentsRepository documents, IEmbeddingRepo
             var fragment = await documents.GetFragment(id);
             context.Add(new Message
             {
-                Type = "context",
+                Type = MessageType.Context,
                 Text = fragment
             });
         }
@@ -37,7 +38,7 @@ public class AskLlm(ILlmChat llm, IDocumentsRepository documents, IEmbeddingRepo
         var llmResponse = await llm.AskLlmChat(conversation, context);
         var responseMessage = new Message
         {
-            Type = "assistant",
+            Type = MessageType.Assistant,
             Text = llmResponse,
             SendTime = DateTime.UtcNow
         };

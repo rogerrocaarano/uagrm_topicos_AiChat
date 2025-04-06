@@ -1,3 +1,5 @@
+using Domain.Constants;
+
 namespace Domain.Model;
 
 public class Conversation
@@ -35,7 +37,7 @@ public class Conversation
 
         return new Message
         {
-            Type = "context-message",
+            Type = MessageType.Rule,
             Text = string.Join(", ", rules)
         };
     }
