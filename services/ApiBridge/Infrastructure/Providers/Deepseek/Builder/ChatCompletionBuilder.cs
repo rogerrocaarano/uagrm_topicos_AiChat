@@ -1,3 +1,4 @@
+using Domain.Constant;
 using Infrastructure.Providers.Deepseek.Constant;
 
 namespace Infrastructure.Providers.Deepseek.Builder;
@@ -39,10 +40,10 @@ public static class ChatCompletionBuilder
     {
         return domainMessageType switch
         {
-            Domain.Constants.MessageType.Assistant => MessageRole.Assistant,
-            Domain.Constants.MessageType.User => MessageRole.User,
-            Domain.Constants.MessageType.Context => MessageRole.System,
-            Domain.Constants.MessageType.Rule => MessageRole.System,
+            MessageType.Assistant => MessageRole.Assistant,
+            MessageType.User => MessageRole.User,
+            MessageType.Context => MessageRole.System,
+            MessageType.Rule => MessageRole.System,
             _ => throw new ArgumentException()
         };
     }

@@ -1,4 +1,4 @@
-namespace Domain.Constants;
+namespace Domain.Constant;
 
 public static class MessageType
 {

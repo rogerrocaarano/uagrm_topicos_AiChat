@@ -1,4 +1,4 @@
-using Domain.Constants;
+using Domain.Constant;
 
 namespace Domain.Model;
 

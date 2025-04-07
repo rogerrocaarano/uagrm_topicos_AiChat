@@ -1,4 +1,4 @@
-using Domain.Constants;
+using Domain.Constant;
 using Domain.Model;
 using Domain.Repository;
 using Domain.Service;
