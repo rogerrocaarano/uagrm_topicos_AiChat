@@ -1,13 +1,13 @@
-from datetime import datetime
-
 from fastapi import FastAPI, HTTPException
 
 from Application.UseCase.SearchBySimilarity import SearchBySimilarity
 from Application.UseCase.StoreDocumentFragment import StoreDocumentFragment
 from Infrastructure.di.Container import Container
+from Infrastructure.Nlp import NlpProcesor
 from Domain.Model.ApiResponse import ApiResponse
 from Presentation.Documents.PostFragmentCompare import PostFragmentCompare
 from Presentation.Documents.PostFragmentIngest import PostFragmentIngest
+from Presentation.TextProcessors.PostSplitterRequest import PostSplitterRequest
 
 di = Container()
 app = FastAPI()
@@ -57,5 +57,19 @@ async def post_documents_fragment_compare(request: PostFragmentCompare) -> ApiRe
 
     if not content:
         raise HTTPException(status_code=404, detail="No matches found")
+
+    return ApiResponse(content=content)
+
+@app.post("/text-processors/splitter")
+async def post_text_processors_splitter(request: PostSplitterRequest) -> ApiResponse:
+    """
+    Endpoint to split a text into fragments.
+    :param request: str: The text to be split into fragments.
+    :return: ApiResponse: The response object containing the fragments.
+    """
+    try:
+        content = NlpProcesor.split_text(request.text)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
     return ApiResponse(content=content)
