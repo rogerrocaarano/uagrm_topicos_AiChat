@@ -14,17 +14,15 @@ configuration
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 services.AddOpenApi();
+
+// Inject the configuration into the DI container and register the services
 services.AddInfrastructure(configuration);
 services.AddUseCases();
 
 var app = builder.Build();
 
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
 app.UseHttpsRedirection();
 app.MapAppEndpoints();
+app.MapOpenApi();
+
+app.Run();
