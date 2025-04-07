@@ -1,7 +1,7 @@
-using Infrastructure.Api.Deepseek.Models;
 using Infrastructure.Providers.Deepseek.Builder;
 using Infrastructure.Providers.Deepseek.Constant;
-using Infrastructure.Providers.Deepseek.Models;
+using Infrastructure.Providers.Deepseek.Dto;
+using Infrastructure.Providers.Deepseek.Model;
 using RestSharp;
 
 namespace Infrastructure.Providers.Deepseek;

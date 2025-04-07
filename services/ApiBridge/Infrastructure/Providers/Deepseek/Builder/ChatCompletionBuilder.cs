@@ -1,26 +1,28 @@
 using Domain.Constant;
 using Infrastructure.Providers.Deepseek.Constant;
+using Infrastructure.Providers.Deepseek.Dto;
+using Infrastructure.Providers.Deepseek.Model;
 
 namespace Infrastructure.Providers.Deepseek.Builder;
 
 public static class ChatCompletionBuilder
 {
-    public static Models.Message BuildMessage(Domain.Model.Message message)
+    public static Message BuildMessage(Domain.Model.Message message)
     {
-        return new Models.Message(RoleMapping(message.Type), message.Text);
+        return new Message(RoleMapping(message.Type), message.Text);
     }
 
-    public static Models.ChatCompletionRequest BuildRequest(Domain.Model.Conversation conversation,
+    public static ChatCompletionRequest BuildRequest(Domain.Model.Conversation conversation,
         List<Domain.Model.Message> context)
     {
         var messages = BuildMessageList(conversation, context);
-        return new Models.ChatCompletionRequest(messages);
+        return new ChatCompletionRequest(messages);
     }
 
-    private static List<Models.Message> BuildMessageList(Domain.Model.Conversation conversation,
+    private static List<Message> BuildMessageList(Domain.Model.Conversation conversation,
         List<Domain.Model.Message> context)
     {
-        var messages = new List<Models.Message>();
+        var messages = new List<Message>();
         messages.Add(BuildMessage(conversation.Rules));
         messages.AddRange(context.Select(BuildMessage));
 

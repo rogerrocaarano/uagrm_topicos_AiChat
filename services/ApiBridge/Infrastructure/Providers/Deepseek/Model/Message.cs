@@ -1,4 +1,4 @@
-namespace Infrastructure.Providers.Deepseek.Models;
+namespace Infrastructure.Providers.Deepseek.Model;
 
 public record Message(
     string Role,
