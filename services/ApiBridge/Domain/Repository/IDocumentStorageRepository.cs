@@ -1,6 +1,6 @@
-namespace Domain.Service;
+namespace Domain.Repository;
 
-public interface IDocumentStorageService
+public interface IDocumentStorageRepository
 {
     /// <summary>
     /// Gets a fragment by its unique identifier.
