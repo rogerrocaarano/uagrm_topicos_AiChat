@@ -14,7 +14,33 @@ public class Conversation
         Question = userQuestion;
         Rules = BuildRules();
     }
-    
+
+    public Conversation(List<Message> listOfMessages, Message userQuestion)
+    {
+        AnsweredQuestions = new List<(Message, Message)>();
+        Question = userQuestion;
+        Rules = BuildRules();
+        foreach (var question in listOfMessages.Where(m => m.Type == MessageType.User))
+        {
+            var messageTuple = BuildMessageTuple(listOfMessages, question);
+            if (messageTuple != null)
+            {
+                AnsweredQuestions.Add(messageTuple.Value);
+            }
+        }
+    }
+
+    private (Message, Message)? BuildMessageTuple(List<Message> listOfMessages, Message question)
+    {
+        var answer = listOfMessages.Find(m =>
+            m.LinkId == question.LinkId &&
+            m.Type == MessageType.Assistant
+        );
+        return answer != null
+            ? (question, answer)
+            : null;
+    }
+
     public void AnswerQuestion(Message answer)
     {
         AnsweredQuestions.Add((Question, answer));

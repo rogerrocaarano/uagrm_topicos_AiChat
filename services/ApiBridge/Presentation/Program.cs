@@ -1,4 +1,5 @@
 using Infrastructure;
+using Presentation.Endpoint;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -14,9 +15,10 @@ configuration
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 services.AddOpenApi();
 services.AddInfrastructure(configuration);
+services.AddUseCases();
 
 var app = builder.Build();
-app.MapFrontEndEndpoints();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -25,3 +27,4 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.MapAppEndpoints();

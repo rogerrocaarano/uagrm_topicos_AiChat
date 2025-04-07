@@ -36,11 +36,13 @@ public class AskLlm(ILlmChat llm, IDocumentsRepository documents, IEmbeddingRepo
     private async Task<Message> GetLlmResponse(Conversation conversation, List<Message> context)
     {
         var llmResponse = await llm.AskLlmChat(conversation, context);
+        conversation.Question.LinkId = Guid.NewGuid();
         var responseMessage = new Message
         {
             Type = MessageType.Assistant,
             Text = llmResponse,
-            SendTime = DateTime.UtcNow
+            SendTime = DateTime.UtcNow,
+            LinkId = conversation.Question.LinkId
         };
         return responseMessage;
     }
