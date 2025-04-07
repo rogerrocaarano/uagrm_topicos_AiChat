@@ -1,8 +1,8 @@
-using Domain.Repository;
+using Domain.Service;
 
 namespace Application.UseCase;
 
-public class SeedVectorStorage(IDocumentsRepository documents, IEmbeddingRepository embeddings)
+public class SeedVectorStorage(IDocumentStorageService documents, IEmbeddingService embeddings)
 {
     public async Task Execute()
     {

@@ -1,11 +1,10 @@
 using Domain.Constant;
 using Domain.Model;
-using Domain.Repository;
 using Domain.Service;
 
 namespace Application.UseCase;
 
-public class AskLlm(ILlmChat llm, IDocumentsRepository documents, IEmbeddingRepository embeddings)
+public class AskLlm(IllmChatService illm, IDocumentStorageService documents, IEmbeddingService embeddings)
 {
     public async Task<Conversation> Execute(Conversation conversation)
     {
@@ -35,7 +34,7 @@ public class AskLlm(ILlmChat llm, IDocumentsRepository documents, IEmbeddingRepo
 
     private async Task<Message> GetLlmResponse(Conversation conversation, List<Message> context)
     {
-        var llmResponse = await llm.AskLlmChat(conversation, context);
+        var llmResponse = await illm.AskLlmChat(conversation, context);
         conversation.Question.LinkId = Guid.NewGuid();
         var responseMessage = new Message
         {

@@ -1,12 +1,12 @@
 using Domain.Model;
-using Domain.Repository;
+using Domain.Service;
 using Infrastructure.Providers.VectorStorage.Documents;
 using Infrastructure.Providers.VectorStorage.Models;
 using RestSharp;
 
 namespace Infrastructure.Providers.VectorStorage;
 
-public class Client : IDisposable, IEmbeddingRepository
+public class Client : IDisposable, IEmbeddingService
 {
     private readonly RestClient _client;
 

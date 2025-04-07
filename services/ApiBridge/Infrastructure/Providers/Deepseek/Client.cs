@@ -1,12 +1,11 @@
 using Infrastructure.Providers.Deepseek.Builder;
 using Infrastructure.Providers.Deepseek.Constant;
 using Infrastructure.Providers.Deepseek.Dto;
-using Infrastructure.Providers.Deepseek.Model;
 using RestSharp;
 
 namespace Infrastructure.Providers.Deepseek;
 
-public class Client : IDisposable, Domain.Service.ILlmChat
+public class Client : IDisposable, Domain.Service.IllmChatService
 {
     private readonly RestClient _client;
     private readonly string _apiKey;

@@ -1,6 +1,6 @@
-namespace Domain.Repository;
+namespace Domain.Service;
 
-public interface IEmbeddingRepository
+public interface IEmbeddingService
 {
     Task<Guid> SaveEmbedding(string content);
     Task<List<Guid>> GetSimilarEmbeddingIds(string content);

@@ -1,9 +1,9 @@
 using System.Net.Http.Json;
-using Domain.Repository;
+using Domain.Service;
 
 namespace Infrastructure.Providers.DocumentStorage;
 
-public class Client(string baseUrl) : IDocumentsRepository
+public class Client(string baseUrl) : IDocumentStorageService
 {
     private readonly HttpClient _httpClient = new()
     {
