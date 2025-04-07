@@ -4,7 +4,7 @@ using Domain.Service;
 
 namespace Application.UseCase;
 
-public class AskLlm(IllmChatService illm, IDocumentStorageService documents, IEmbeddingService embeddings)
+public class AskLlm(IllmChatService illm, IDocumentStorageService documents, IVectorStorageService embeddings)
 {
     public async Task<Conversation> Execute(Conversation conversation)
     {

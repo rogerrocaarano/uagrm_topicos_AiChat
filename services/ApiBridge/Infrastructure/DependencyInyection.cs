@@ -11,21 +11,24 @@ public static class DependencyInjection
     {
         services.AddSingleton<IDocumentStorageService, Providers.DocumentStorage.Client>(provider =>
             {
-                const string baseUrl = ""; // TODO: Reemplazar con la configuración de la API Base URL
+                string baseUrl = configuration["Services:DocumentStorage:BaseUrl"] ??
+                                 throw new InvalidOperationException();
                 return new Providers.DocumentStorage.Client(baseUrl);
             }
-            );
-        
-        services.AddSingleton<IEmbeddingService, Providers.VectorStorage.Client>(provider =>
+        );
+
+        services.AddSingleton<IVectorStorageService, Providers.VectorStorage.Client>(provider =>
             {
-                const string baseUrl = ""; // TODO: Reemplazar con la configuración de la API Base URL
+                string baseUrl = configuration["Services:VectorStorage:BaseUrl"] ??
+                                 throw new InvalidOperationException();
                 return new Providers.VectorStorage.Client(baseUrl);
             }
         );
 
         services.AddSingleton<IllmChatService>(provider =>
             {
-                const string apiKey = ""; // TODO: Reemplazar con la configuración de la API Key
+                string apiKey = configuration["Services:LlmChat:ApiKey"] ??
+                                throw new InvalidOperationException();
                 return new Providers.Deepseek.Client(apiKey);
             }
         );
@@ -39,7 +42,7 @@ public static class DependencyInjection
         {
             var llm = provider.GetRequiredService<IllmChatService>();
             var documents = provider.GetRequiredService<IDocumentStorageService>();
-            var embeddings = provider.GetRequiredService<IEmbeddingService>();
+            var embeddings = provider.GetRequiredService<IVectorStorageService>();
             return new AskLlm(llm, documents, embeddings);
         });
 

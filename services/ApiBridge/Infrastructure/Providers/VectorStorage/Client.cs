@@ -1,12 +1,13 @@
 using Domain.Model;
 using Domain.Service;
+using Infrastructure.Providers.VectorStorage.Constant;
 using Infrastructure.Providers.VectorStorage.Documents;
 using Infrastructure.Providers.VectorStorage.Models;
 using RestSharp;
 
 namespace Infrastructure.Providers.VectorStorage;
 
-public class Client : IDisposable, IEmbeddingService
+public class Client : IDisposable, IVectorStorageService
 {
     private readonly RestClient _client;
 
@@ -19,7 +20,7 @@ public class Client : IDisposable, IEmbeddingService
     public async Task<Guid> SaveEmbedding(string content)
     {
         var jsonBody = new PostFragmentIngest(content, "test");
-        var request = new RestRequest("/documents/fragment-ingest", Method.Post)
+        var request = new RestRequest(Endpoint.FragmentIngest, Method.Post)
             .AddHeader("Content-Type", "application/json")
             .AddJsonBody(jsonBody);
 
@@ -31,7 +32,7 @@ public class Client : IDisposable, IEmbeddingService
     public async Task<List<Guid>> GetSimilarEmbeddingIds(string content)
     {
         var jsonBody = new PostFragmentCompare(content, 5);
-        var request = new RestRequest("/documents/fragment-compare", Method.Post)
+        var request = new RestRequest(Endpoint.FragmentCompare, Method.Post)
             .AddHeader("Content-Type", "application/json")
             .AddJsonBody(jsonBody);
         

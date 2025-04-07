@@ -2,7 +2,7 @@ using Domain.Service;
 
 namespace Application.UseCase;
 
-public class SeedVectorStorage(IDocumentStorageService documents, IEmbeddingService embeddings)
+public class SeedVectorStorage(IDocumentStorageService documents, IVectorStorageService embeddings)
 {
     public async Task Execute()
     {
