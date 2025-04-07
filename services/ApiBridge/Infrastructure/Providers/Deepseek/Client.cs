@@ -5,7 +5,7 @@ using RestSharp;
 
 namespace Infrastructure.Providers.Deepseek;
 
-public class Client : IDisposable, Domain.Service.IllmChatService
+public class Client : IDisposable, Domain.Service.ILlmChatService
 {
     private readonly RestClient _client;
     private readonly string _apiKey;

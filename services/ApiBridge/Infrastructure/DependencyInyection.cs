@@ -25,7 +25,7 @@ public static class DependencyInjection
             }
         );
 
-        services.AddSingleton<IllmChatService>(provider =>
+        services.AddSingleton<ILlmChatService>(provider =>
             {
                 string apiKey = configuration["Services:LlmChat:ApiKey"] ??
                                 throw new InvalidOperationException();
@@ -40,7 +40,7 @@ public static class DependencyInjection
     {
         services.AddScoped<AskLlm>(provider =>
         {
-            var llm = provider.GetRequiredService<IllmChatService>();
+            var llm = provider.GetRequiredService<ILlmChatService>();
             var documents = provider.GetRequiredService<IDocumentStorageService>();
             var embeddings = provider.GetRequiredService<IVectorStorageService>();
             return new AskLlm(llm, documents, embeddings);
