@@ -45,6 +45,13 @@ public static class DependencyInjection
             var embeddings = provider.GetRequiredService<IVectorStorageService>();
             return new AskLlm(llm, documents, embeddings);
         });
+        
+        services.AddScoped<SeedVectorStorage>(provider =>
+        {
+            var documents = provider.GetRequiredService<IDocumentStorageService>();
+            var embeddings = provider.GetRequiredService<IVectorStorageService>();
+            return new SeedVectorStorage(documents, embeddings);
+        });
 
         return services;
     }
