@@ -1,5 +1,3 @@
-using Domain.Model;
-using Domain.Service;
 using Infrastructure.Providers.VectorStorage.Constant;
 using Infrastructure.Providers.VectorStorage.Documents;
 using Infrastructure.Providers.VectorStorage.Models;
@@ -7,7 +5,7 @@ using RestSharp;
 
 namespace Infrastructure.Providers.VectorStorage;
 
-public class Client : IDisposable, IVectorStorageService
+public class Client : IDisposable, Domain.Service.IVectorStorageService
 {
     private readonly RestClient _client;
 
@@ -24,7 +22,7 @@ public class Client : IDisposable, IVectorStorageService
             .AddHeader("Content-Type", "application/json")
             .AddJsonBody(jsonBody);
 
-        var response = await _client.PostAsync<ApiResponse>(request);
+        var response = await _client.PostAsync<Domain.Model.ApiResponse>(request);
         var fragment = (Fragment)response.Content;
         return fragment.Id;
     }
@@ -36,7 +34,7 @@ public class Client : IDisposable, IVectorStorageService
             .AddHeader("Content-Type", "application/json")
             .AddJsonBody(jsonBody);
         
-        var response = await _client.PostAsync<ApiResponse>(request);
+        var response = await _client.PostAsync<Domain.Model.ApiResponse>(request);
         var fragments = (List<Fragment>)response.Content;
         return fragments.Select(f => f.Id).ToList();
     }

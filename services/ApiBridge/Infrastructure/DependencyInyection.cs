@@ -1,6 +1,8 @@
 using Application.UseCase;
 using Domain.Repository;
 using Domain.Service;
+using Infrastructure.Providers.DocumentRepository;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +12,12 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddDbContext<DocumentDbContext>(options =>
+        {
+            string connectionString = configuration["Services:DocumentRepository:ConnectionString"] ??
+                                       throw new InvalidOperationException();
+            options.UseSqlite(connectionString);
+        });
         services.AddSingleton<IDocumentStorageRepository, Providers.DocumentStorage.Client>(provider =>
             {
                 string baseUrl = configuration["Services:DocumentStorage:BaseUrl"] ??
