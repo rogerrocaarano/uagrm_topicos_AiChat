@@ -1,22 +1,53 @@
+using Domain.Constant;
+
 namespace Domain.Model;
 
 public class Conversation
 {
-    public List<Message> UserQuestions { get; private set; }
-    public List<Message> LlmResponses { get; private set; }
-    public List<Message> ContextMessages { get; private set; }
+    public List<(Message, Message)> AnsweredQuestions { get; private set; }
+    public Message? Question { get; set; }
     public Message Rules { get; private set; }
-    
 
-    public Conversation(List<Message> userQuestions, List<Message> llmResponses, List<Message> contextMessages)
+    public Conversation(List<(Message, Message)>? answeredQuestions, Message userQuestion)
     {
-        UserQuestions = userQuestions;
-        LlmResponses = llmResponses;
-        ContextMessages = contextMessages;
-        Rules = DefaultRules();
+        AnsweredQuestions = answeredQuestions ?? new List<(Message, Message)>();
+        Question = userQuestion;
+        Rules = BuildRules();
     }
 
-    private Message DefaultRules()
+    public Conversation(List<Message> listOfMessages, Message userQuestion)
+    {
+        AnsweredQuestions = new List<(Message, Message)>();
+        Question = userQuestion;
+        Rules = BuildRules();
+        foreach (var question in listOfMessages.Where(m => m.Type == MessageType.User))
+        {
+            var messageTuple = BuildMessageTuple(listOfMessages, question);
+            if (messageTuple != null)
+            {
+                AnsweredQuestions.Add(messageTuple.Value);
+            }
+        }
+    }
+
+    private (Message, Message)? BuildMessageTuple(List<Message> listOfMessages, Message question)
+    {
+        var answer = listOfMessages.Find(m =>
+            m.LinkId == question.LinkId &&
+            m.Type == MessageType.Assistant
+        );
+        return answer != null
+            ? (question, answer)
+            : null;
+    }
+
+    public void AnswerQuestion(Message answer)
+    {
+        AnsweredQuestions.Add((Question, answer));
+        Question = null;
+    }
+
+    private Message BuildRules()
     {
         var rules = new List<string>
         {
@@ -30,9 +61,10 @@ public class Conversation
             "Limitaciones: No respondas preguntas que no estén relacionadas con el contexto."
         };
 
-        return new Message(
-            Type: "context-message",
-            Content: string.Join(", ", rules)
-        );
+        return new Message
+        {
+            Type = MessageType.Rule,
+            Text = string.Join(", ", rules)
+        };
     }
 }

@@ -1,6 +1,8 @@
 using Application.UseCase;
 using Domain.Repository;
 using Domain.Service;
+using Infrastructure.Providers.DocumentRepository;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,23 +12,32 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSingleton<IDocumentsRepository, Providers.DocumentStorage.Client>(provider =>
+        // services.AddDbContext<DocumentDbContext>(options =>
+        // {
+        //     string connectionString = configuration["Services:DocumentRepository:ConnectionString"] ??
+        //                                throw new InvalidOperationException();
+        //     options.UseSqlite(connectionString);
+        // });
+        // services.AddSingleton<IDocumentStorageRepository, Providers.DocumentStorage.Client>(provider =>
+        //     {
+        //         string baseUrl = configuration["Services:DocumentStorage:BaseUrl"] ??
+        //                          throw new InvalidOperationException();
+        //         return new Providers.DocumentStorage.Client(baseUrl);
+        //     }
+        // );
+
+        services.AddSingleton<IVectorStorageService, Providers.VectorStorage.Client>(provider =>
             {
-                const string baseUrl = ""; // TODO: Reemplazar con la configuración de la API Base URL
-                return new Providers.DocumentStorage.Client(baseUrl);
-            }
-            );
-        
-        services.AddSingleton<IEmbeddingRepository, Providers.VectorStorage.Client>(provider =>
-            {
-                const string baseUrl = ""; // TODO: Reemplazar con la configuración de la API Base URL
+                string baseUrl = configuration["Services:VectorStorage:BaseUrl"] ??
+                                 throw new InvalidOperationException();
                 return new Providers.VectorStorage.Client(baseUrl);
             }
         );
 
-        services.AddSingleton<ILlmChat>(provider =>
+        services.AddSingleton<ILlmChatService>(provider =>
             {
-                const string apiKey = ""; // TODO: Reemplazar con la configuración de la API Key
+                string apiKey = configuration["Services:LlmChat:ApiKey"] ??
+                                throw new InvalidOperationException();
                 return new Providers.Deepseek.Client(apiKey);
             }
         );
@@ -38,10 +49,17 @@ public static class DependencyInjection
     {
         services.AddScoped<AskLlm>(provider =>
         {
-            var llm = provider.GetRequiredService<ILlmChat>();
-            var documents = provider.GetRequiredService<IDocumentsRepository>();
-            var embeddings = provider.GetRequiredService<IEmbeddingRepository>();
+            var llm = provider.GetRequiredService<ILlmChatService>();
+            var documents = provider.GetRequiredService<IDocumentStorageRepository>();
+            var embeddings = provider.GetRequiredService<IVectorStorageService>();
             return new AskLlm(llm, documents, embeddings);
+        });
+        
+        services.AddScoped<SeedVectorStorage>(provider =>
+        {
+            var documents = provider.GetRequiredService<IDocumentStorageRepository>();
+            var embeddings = provider.GetRequiredService<IVectorStorageService>();
+            return new SeedVectorStorage(documents, embeddings);
         });
 
         return services;

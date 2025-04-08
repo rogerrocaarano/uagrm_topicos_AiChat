@@ -1,39 +1,36 @@
-using Domain.Model;
-using Domain.Service;
-using Infrastructure.Api.Deepseek.Models;
-using Infrastructure.Providers.Deepseek.Models;
+using Infrastructure.Providers.Deepseek.Builder;
+using Infrastructure.Providers.Deepseek.Constant;
+using Infrastructure.Providers.Deepseek.Dto;
 using RestSharp;
 
 namespace Infrastructure.Providers.Deepseek;
 
-public class Client : IDisposable, ILlmChat
+public class Client : IDisposable, Domain.Service.ILlmChatService
 {
-    private RestClient _client;
+    private readonly RestClient _client;
     private readonly string _apiKey;
 
     public Client(string apiKey)
     {
-        var options = new RestClientOptions("https://api.deepseek.com/");
+        var options = new RestClientOptions(ApiEndpoint.BaseUrl);
         _client = new RestClient(options);
         _apiKey = apiKey;
     }
-    
+
     public async Task<ChatCompletionResponse?> PostCompletionChat(ChatCompletionRequest request)
     {
         try
         {
-            var restRequest = new RestRequest("/chat/completions", Method.Post);
-            restRequest.AddHeader("Content-Type", "application/json");
-            restRequest.AddHeader("Authorization", "Bearer " + _apiKey);
+            var restRequest = new RestRequest(ApiEndpoint.ChatCompletions, Method.Post);
+            var headers = new List<KeyValuePair<string, string>>
+            {
+                KeyValuePair.Create("Content-Type", ContentType.Json.Value),
+                KeyValuePair.Create("Authorization", $"Bearer {_apiKey}")
+            };
+            restRequest.AddHeaders(headers);
             restRequest.AddJsonBody(request);
 
-            Console.WriteLine("Sending request to Deepseek API...");
             var restResponse = await _client.PostAsync<ChatCompletionResponse>(restRequest);
-            if (restResponse is not null)
-            {
-                Console.WriteLine("Received response from Deepseek API.");
-            }
-
             return restResponse;
         }
         catch (Exception e)
@@ -42,15 +39,17 @@ public class Client : IDisposable, ILlmChat
             return null;
         }
     }
-    
+
     public void Dispose()
     {
         _client?.Dispose();
         GC.SuppressFinalize(this);
     }
 
-    public Task<string> AskLlmChat(Conversation conversation)
+    public async Task<string> AskLlmChat(Domain.Model.Conversation conversation, List<Domain.Model.Message> context)
     {
-        throw new NotImplementedException();
+        var request = ChatCompletionBuilder.BuildRequest(conversation, context);
+        var response = await PostCompletionChat(request);
+        return response.Choices[0].Message.Content;
     }
 }
