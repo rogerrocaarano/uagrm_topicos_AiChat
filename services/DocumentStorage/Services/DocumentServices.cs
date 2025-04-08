@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
-using DocumentStorage.Data;
-using DocumentStorage.Models;
 using Newtonsoft.Json;
-using DocumentStorage.Controllers;
+using PuebaTopicosSpacy.Data;
+using PuebaTopicosSpacy.Models;
 
 namespace DocumentStorage.Services
 {
@@ -16,9 +15,8 @@ namespace DocumentStorage.Services
             _context = context;
         }
 
-        // private readonly string _pythonPath = @"C:\Python311\python.exe";
-        // private readonly string _scriptPath = @"C:\Users\Nathalia\Desktop\PythonProcessor\process_txt.py";
-        
+
+
         private readonly string _pythonPath = Environment.GetEnvironmentVariable("PYTHON_PATH") ?? "python";
         private readonly string _scriptPath = Path.Combine(Directory.GetCurrentDirectory(), "utilities", "process_text.py");
 
@@ -75,40 +73,6 @@ namespace DocumentStorage.Services
             }
         }
 
-        //public async Task GuardarDocumentosEnBD(List<DocumentJsonModel> documentos)
-        //{
-        //    foreach (var doc in documentos)
-        //    {
-        //        var documento = new Document
-        //        {
-        //            Id = Guid.Parse(doc.Document.Id),
-        //            Name = doc.Document.Name,
-        //            Description = doc.Document.Description,
-        //            UploadDateTime = DateTime.Parse(doc.Document.UploadDateTime)
-
-        //    };
-
-        //        _context.Documents.Add(documento);
-        //        await _context.SaveChangesAsync(); 
-
-        //        foreach (var frag in doc.Fragments)
-        //        {
-        //            var fragmento = new Fragment
-        //            {
-        //                Id = Guid.Parse(frag.Id),
-        //                VectorId = null,
-        //                Content = frag.Content,
-        //                DocumentId = documento.Id,
-        //                SequenceId = frag.SequenceId
-        //            };
-
-        //            _context.Fragments.Add(fragmento);
-        //        }
-        //    }
-
-        //    await _context.SaveChangesAsync();
-        //}
-
         public async Task GuardarDocumentosEnBD(List<DocumentJsonModel> documentos)
         {
             foreach (var doc in documentos)
@@ -129,7 +93,7 @@ namespace DocumentStorage.Services
                     Id = Guid.Parse(doc.Document.Id),
                     Name = doc.Document.Name,
                     Description = doc.Document.Description,
-                    UploadDateTime = uploadDateTime 
+                    UploadDateTime = uploadDateTime
                 };
 
                 _context.Documents.Add(documento);
@@ -214,7 +178,7 @@ namespace DocumentStorage.Services
                 }).FirstOrDefaultAsync();
         }
 
-        
+
         public async Task<bool> SetVectorIdAsync(Guid fragmentId, Guid vectorId)
         {
             var fragment = await _context.Fragments.FindAsync(fragmentId);
