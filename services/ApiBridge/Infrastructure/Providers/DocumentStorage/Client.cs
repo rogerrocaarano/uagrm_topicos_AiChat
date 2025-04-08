@@ -1,6 +1,9 @@
 using System.Net.Http.Json;
 using Domain.Repository;
 using Domain.Service;
+using Infrastructure.Providers.Deepseek.Constant;
+using Infrastructure.Providers.DocumentStorage.Model;
+using RestSharp;
 
 namespace Infrastructure.Providers.DocumentStorage;
 
@@ -8,52 +11,60 @@ public class Client(string baseUrl) : IDocumentStorageService
 {
     private readonly HttpClient _httpClient = new()
     {
-        BaseAddress = new Uri(baseUrl)
+        BaseAddress = new Uri("http://localhost:5125")
     };
 
     public async Task<string> GetFragment(Guid id)
     {
-        return await _httpClient.GetFromJsonAsync<string>($"api/documents/GetFragmentById?fragmentId={id}");
+        return await _httpClient.GetFromJsonAsync<string>($"/GetFragmentById?fragmentId={id}");
     }
 
     public async Task<List<string>> GetFragments(List<Guid> ids)
     {
-        var response = await _httpClient.PostAsJsonAsync("api/documents/GetFragmentsByIds", ids);
+        var response = await _httpClient.PostAsJsonAsync("/GetFragmentsByIds", ids);
         return await response.Content.ReadFromJsonAsync<List<string>>();
     }
 
     public async Task<string> GetFragmentByEmbeddedId(Guid embeddedId)
     {
         return await _httpClient.GetFromJsonAsync<string>(
-            $"api/documents/GetFragmentByEmbeddedId?embeddedId={embeddedId}");
+            $"/GetFragmentByEmbeddedId?embeddedId={embeddedId}");
     }
 
     public async Task<List<string>> GetFragmentsByEmbeddedIds(List<Guid> embeddedIds)
     {
-        var response = await _httpClient.PostAsJsonAsync("api/documents/GetFragmentsByEmbeddedIds", embeddedIds);
+        var response = await _httpClient.PostAsJsonAsync("/GetFragmentsByEmbeddedIds", embeddedIds);
         return await response.Content.ReadFromJsonAsync<List<string>>();
     }
 
     public async Task<List<Guid>> GetAllDocumentIds()
     {
-        return await _httpClient.GetFromJsonAsync<List<Guid>>("api/documents/GetAllDocuments");
+        var documents = await _httpClient.GetFromJsonAsync<List<Model.DocumentWrapper>>("/GetAllDocuments");
+        return documents.Select(document => document.Document.Id).ToList();
     }
 
-    public async Task<List<string>> GetDocumentFragments(Guid documentId)
+    public async Task<List<Domain.Model.Fragment>> GetDocumentFragments(Guid documentId)
     {
-        return await _httpClient.GetFromJsonAsync<List<string>>(
-            $"api/documents/GetDocumentById?documentId={documentId}");
+        var document = await _httpClient.GetFromJsonAsync<Model.FragmentWrapper>(
+            $"/GetDocumentById?documentId={documentId}");
+        return document.Fragments.Select(fragment =>
+            new Domain.Model.Fragment
+            {
+                Id = fragment.Id,
+                Content = fragment.Content,
+                DocumentId = fragment.DocumentId
+            }
+        ).ToList();
     }
 
     public async Task<List<Guid>> GetDocumentFragmentIds(Guid documentId)
     {
         return await _httpClient.GetFromJsonAsync<List<Guid>>(
-            $"api/documents/GetDocumentFragmentIds?documentId={documentId}");
+            $"/GetDocumentFragmentIds?documentId={documentId}");
     }
 
     public async Task SetVectorId(Guid fragmentId, Guid vectorId)
     {
-        var response =
-            await _httpClient.PostAsync($"api/documents/SetVectorId?fragmentId={fragmentId}&vectorId={vectorId}", null);
+        await _httpClient.PostAsync($"/UpdateFragmentVectorId?fragmentId={fragmentId}&vectorId={vectorId}", null);
     }
 }
