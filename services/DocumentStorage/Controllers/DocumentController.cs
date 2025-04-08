@@ -1,8 +1,8 @@
 ﻿using DocumentStorage.Services;
 using Microsoft.AspNetCore.Mvc;
-using PuebaTopicosSpacy.Models;
+using DocumentStorage.Models;
 
-namespace PuebaTopicosSpacy.Controllers
+namespace DocumentStorage.Controllers
 {
     public class DocumentController : Controller
     {

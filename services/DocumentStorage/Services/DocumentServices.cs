@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using Newtonsoft.Json;
-using PuebaTopicosSpacy.Data;
-using PuebaTopicosSpacy.Models;
+using DocumentStorage.Data;
+using DocumentStorage.Models;
 
 namespace DocumentStorage.Services
 {
@@ -16,9 +16,10 @@ namespace DocumentStorage.Services
         }
 
 
-
         private readonly string _pythonPath = Environment.GetEnvironmentVariable("PYTHON_PATH") ?? "python";
-        private readonly string _scriptPath = Path.Combine(Directory.GetCurrentDirectory(), "utilities", "process_text.py");
+
+        private readonly string _scriptPath =
+            Path.Combine(Directory.GetCurrentDirectory(), "utilities", "process_text.py");
 
 
         public async Task<List<DocumentJsonModel>> ProcesarArchivosTxtAsync()
@@ -78,7 +79,8 @@ namespace DocumentStorage.Services
             foreach (var doc in documentos)
             {
                 DateTime uploadDateTime;
-                if (!DateTime.TryParse(doc.Document.UploadDateTime, null, System.Globalization.DateTimeStyles.RoundtripKind, out uploadDateTime))
+                if (!DateTime.TryParse(doc.Document.UploadDateTime, null,
+                        System.Globalization.DateTimeStyles.RoundtripKind, out uploadDateTime))
                 {
                     throw new Exception($"La fecha de carga no es válida: {doc.Document.UploadDateTime}");
                 }
@@ -109,7 +111,6 @@ namespace DocumentStorage.Services
                         DocumentId = documento.Id,
                         SequenceId = frag.SequenceId
                     };
-
                     _context.Fragments.Add(fragmento);
                 }
             }
