@@ -6,6 +6,12 @@
         public List<FragmentJsonModel> Fragments { get; set; }
     }
 
+        public class DocumentModel
+    {
+        public DocumentData Document { get; set; }
+    }
+
+
     public class DocumentData
     {
         public string Id { get; set; }
