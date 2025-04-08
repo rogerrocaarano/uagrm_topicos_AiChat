@@ -27,8 +27,8 @@ public class Client(string baseUrl) : IDocumentStorageService
 
     public async Task<string> GetFragmentByEmbeddedId(Guid embeddedId)
     {
-        return await _httpClient.GetFromJsonAsync<string>(
-            $"/GetFragmentByEmbeddedId?embeddedId={embeddedId}");
+        var request = await _httpClient.GetAsync($"/GetFragmentByEmbeddedId?embeddedId={embeddedId}");
+        return await request.Content.ReadAsStringAsync();
     }
 
     public async Task<List<string>> GetFragmentsByEmbeddedIds(List<Guid> embeddedIds)
