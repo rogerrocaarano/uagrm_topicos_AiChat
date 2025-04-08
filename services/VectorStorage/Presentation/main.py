@@ -48,7 +48,7 @@ async def post_documents_fragment_compare(request: PostFragmentCompare) -> ApiRe
     :return: ApiResponse: The response object containing the best match or matches ids found.
     """
     try:
-        content = SearchBySimilarity(di.fragments_repository).execute(
+        content = SearchBySimilarity(di.fragments_repository()).execute(
             content=request.fragment,
             max_results=request.max_matches
         )
