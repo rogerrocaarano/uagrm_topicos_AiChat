@@ -25,7 +25,14 @@ public static class DependencyInjection
         //         return new Providers.DocumentStorage.Client(baseUrl);
         //     }
         // );
-
+        services.AddSingleton<IDocumentStorageService, Providers.DocumentStorage.Client>(provider =>
+            {
+                string baseUrl = configuration["Services:VectorStorage:BaseUrl"] ??
+                                 throw new InvalidOperationException();
+                return new Providers.DocumentStorage.Client(baseUrl);
+            }
+        );
+        
         services.AddSingleton<IVectorStorageService, Providers.VectorStorage.Client>(provider =>
             {
                 string baseUrl = configuration["Services:VectorStorage:BaseUrl"] ??
@@ -50,14 +57,14 @@ public static class DependencyInjection
         services.AddScoped<AskLlm>(provider =>
         {
             var llm = provider.GetRequiredService<ILlmChatService>();
-            var documents = provider.GetRequiredService<IDocumentStorageRepository>();
+            var documents = provider.GetRequiredService<IDocumentStorageService>();
             var embeddings = provider.GetRequiredService<IVectorStorageService>();
             return new AskLlm(llm, documents, embeddings);
         });
-        
+
         services.AddScoped<SeedVectorStorage>(provider =>
         {
-            var documents = provider.GetRequiredService<IDocumentStorageRepository>();
+            var documents = provider.GetRequiredService<IDocumentStorageService>();
             var embeddings = provider.GetRequiredService<IVectorStorageService>();
             return new SeedVectorStorage(documents, embeddings);
         });

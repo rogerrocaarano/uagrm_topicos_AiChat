@@ -30,7 +30,7 @@ async def post_documents_fragment_ingest(request: PostFragmentIngest) -> ApiResp
     :return: ApiResponse: The response object containing the result of the ingestion.
     """
     try:
-        content = StoreDocumentFragment(di.fragments_repository).execute(
+        content = StoreDocumentFragment(di.fragments_repository()).execute(
             content=request.fragment,
             document_name=request.documentName
         )
@@ -48,7 +48,7 @@ async def post_documents_fragment_compare(request: PostFragmentCompare) -> ApiRe
     :return: ApiResponse: The response object containing the best match or matches ids found.
     """
     try:
-        content = SearchBySimilarity(di.fragments_repository).execute(
+        content = SearchBySimilarity(di.fragments_repository()).execute(
             content=request.fragment,
             max_results=request.max_matches
         )

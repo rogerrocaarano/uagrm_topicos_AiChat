@@ -68,15 +68,22 @@ class ChromaDbFragmentRepository(IFragmentRepository):
         :param results: QueryResult: The results from the query.
         :return: list[SimilarityResult]: A list of SimilarityResult objects.
         """
+        fragment_ids : list[str] = results.get("ids")[0]
+        scores : list[float] = results.get("distances")[0]
+        meta_datas : list = results.get("metadatas")[0]
+
+        meta_tags : list[list[MetaTag]] = []
+        for meta_data in meta_datas:
+            meta_tags.append([MetaTag(key=key, value=value) for key, value in meta_data.items()])
+
         similarity_results: list[SimilarityResult] = []
-        for i in range(len(results["ids"])):
-            similarity_results.append(
-                SimilarityResult(
-                    fragmentId=uuid.UUID(results.get("ids")[i][0]),
-                    score=results.get("distances")[i][0],
-                    tags=[MetaTag(key=k, value=v) for k, v in results["metadatas"][i]]
-                )
+        for i in range(len(fragment_ids)):
+            similarity_result = SimilarityResult(
+                fragmentId=uuid.UUID(fragment_ids[i]),
+                score=scores[i],
+                tags=meta_tags[i]
             )
+            similarity_results.append(similarity_result)
         return similarity_results
 
     @staticmethod

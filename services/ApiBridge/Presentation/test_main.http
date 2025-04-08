@@ -1,0 +1,2 @@
+GET http://localhost:5285/system/db/vector-storage/build
+

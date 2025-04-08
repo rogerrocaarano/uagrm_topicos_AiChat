@@ -3,7 +3,7 @@ using Domain.Service;
 
 namespace Application.UseCase;
 
-public class SeedVectorStorage(IDocumentStorageRepository documents, IVectorStorageService embeddings)
+public class SeedVectorStorage(IDocumentStorageService documents, IVectorStorageService embeddings)
 {
     public async Task Execute()
     {
@@ -19,8 +19,8 @@ public class SeedVectorStorage(IDocumentStorageRepository documents, IVectorStor
         var fragments = await documents.GetDocumentFragments(documentId);
         foreach (var fragment in fragments)
         {
-            var vectorId = await embeddings.SaveEmbedding(fragment);
-            await documents.SetVectorId(documentId, vectorId);
+            var vectorId = await embeddings.SaveEmbedding(fragment.Content);
+            await documents.SetVectorId(fragment.Id, vectorId);
         }
     }
 }
