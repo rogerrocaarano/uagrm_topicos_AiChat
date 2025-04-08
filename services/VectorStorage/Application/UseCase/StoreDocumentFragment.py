@@ -6,8 +6,8 @@ from Domain.Repository.IFragmentRepository import IFragmentRepository
 
 
 class StoreDocumentFragment:
-    def __init__(self, repository_provider: providers.Provider[IFragmentRepository]):
-        self.__repository: IFragmentRepository = repository_provider()
+    def __init__(self, repository: IFragmentRepository):
+        self.__repository: IFragmentRepository = repository
 
     def execute(self, content: str, document_name: str) -> FragmentDto:
         document_name_tag = MetaTag(

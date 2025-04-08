@@ -30,7 +30,7 @@ async def post_documents_fragment_ingest(request: PostFragmentIngest) -> ApiResp
     :return: ApiResponse: The response object containing the result of the ingestion.
     """
     try:
-        content = StoreDocumentFragment(di.fragments_repository).execute(
+        content = StoreDocumentFragment(di.fragments_repository()).execute(
             content=request.fragment,
             document_name=request.documentName
         )
