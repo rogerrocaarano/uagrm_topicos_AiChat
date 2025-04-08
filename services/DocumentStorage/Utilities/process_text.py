@@ -3,8 +3,12 @@ import os
 import uuid
 import json
 from datetime import datetime
+import warnings
 
-nlp = spacy.load("en_core_web_sm")
+# Ignorar FutureWarning
+warnings.filterwarnings("ignore", category=FutureWarning)
+
+nlp = spacy.load("es_dep_news_trf")
 
 def process_document(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
@@ -28,12 +32,12 @@ def process_document(file_path):
             "id": doc_id,
             "name": os.path.basename(file_path),
             "description": "Procesado con spaCy",
-            "uploaddatetime": str(datetime.utcnow())
+            "uploaddatetime": str(datetime.now())
         },
         "fragments": fragments
     }
 
-folder = "C:\\Users\\Nathalia\\source\\repos\\PuebaTopicosSpacy\\DocPenales"
+folder = "C:\\Users\\rogerroca\\code\\uagrm_topicos_AiChat\\services\\DocumentStorage\\DocPenales"
 
 documents = []
 for file_name in os.listdir(folder):

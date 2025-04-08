@@ -12,6 +12,7 @@ namespace Infrastructure.Providers.DocumentRepository
 
         public DbSet<Document> Documents { get; set; }
         public DbSet<Fragment> Fragments { get; set; }
+        public DbSet<FragmentVectorDbId> VectorDbIds { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -30,6 +31,15 @@ namespace Infrastructure.Providers.DocumentRepository
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Content).IsRequired();
+            });
+
+            modelBuilder.Entity<FragmentVectorDbId>(entity =>
+            {
+                entity.HasKey(e => new { e.FragmentId, e.ExternalId });
+
+                entity.HasOne(e => e.Fragment)
+                    .WithMany()
+                    .HasForeignKey(e => e.FragmentId);
             });
         }
     }

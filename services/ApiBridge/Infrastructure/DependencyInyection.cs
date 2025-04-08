@@ -12,19 +12,19 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<DocumentDbContext>(options =>
-        {
-            string connectionString = configuration["Services:DocumentRepository:ConnectionString"] ??
-                                       throw new InvalidOperationException();
-            options.UseSqlite(connectionString);
-        });
-        services.AddSingleton<IDocumentStorageRepository, Providers.DocumentStorage.Client>(provider =>
-            {
-                string baseUrl = configuration["Services:DocumentStorage:BaseUrl"] ??
-                                 throw new InvalidOperationException();
-                return new Providers.DocumentStorage.Client(baseUrl);
-            }
-        );
+        // services.AddDbContext<DocumentDbContext>(options =>
+        // {
+        //     string connectionString = configuration["Services:DocumentRepository:ConnectionString"] ??
+        //                                throw new InvalidOperationException();
+        //     options.UseSqlite(connectionString);
+        // });
+        // services.AddSingleton<IDocumentStorageRepository, Providers.DocumentStorage.Client>(provider =>
+        //     {
+        //         string baseUrl = configuration["Services:DocumentStorage:BaseUrl"] ??
+        //                          throw new InvalidOperationException();
+        //         return new Providers.DocumentStorage.Client(baseUrl);
+        //     }
+        // );
 
         services.AddSingleton<IVectorStorageService, Providers.VectorStorage.Client>(provider =>
             {

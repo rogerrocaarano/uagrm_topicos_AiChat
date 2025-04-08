@@ -4,7 +4,7 @@ using Domain.Service;
 
 namespace Infrastructure.Providers.DocumentStorage;
 
-public class Client(string baseUrl) : IDocumentStorageRepository
+public class Client(string baseUrl) : IDocumentStorageService
 {
     private readonly HttpClient _httpClient = new()
     {

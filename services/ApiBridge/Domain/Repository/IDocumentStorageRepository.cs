@@ -1,3 +1,5 @@
+using Domain.Model;
+
 namespace Domain.Repository;
 
 public interface IDocumentStorageRepository
@@ -52,4 +54,5 @@ public interface IDocumentStorageRepository
     /// <param name="fragmentId">Fragment unique ID on DocumentsRepository.</param>
     /// <param name="vectorId">Vector unique ID on EmbeddingRepository.</param>
     Task SetVectorId(Guid fragmentId, Guid vectorId);
+    Task SaveFragment(Fragment fragment);
 }

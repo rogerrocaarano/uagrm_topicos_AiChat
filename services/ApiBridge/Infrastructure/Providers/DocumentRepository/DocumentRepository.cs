@@ -1,3 +1,4 @@
+using Domain.Model;
 using Domain.Repository;
 
 namespace Infrastructure.Providers.DocumentRepository;
@@ -40,6 +41,11 @@ public class DocumentRepository : IDocumentStorageRepository
     }
 
     public Task SetVectorId(Guid fragmentId, Guid vectorId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task SaveFragment(Fragment fragment)
     {
         throw new NotImplementedException();
     }
