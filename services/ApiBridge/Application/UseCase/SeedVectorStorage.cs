@@ -19,8 +19,8 @@ public class SeedVectorStorage(IDocumentStorageService documents, IVectorStorage
         var fragments = await documents.GetDocumentFragments(documentId);
         foreach (var fragment in fragments)
         {
-            var vectorId = await embeddings.SaveEmbedding(fragment);
-            await documents.SetVectorId(documentId, vectorId);
+            var vectorId = await embeddings.SaveEmbedding(fragment.Content);
+            await documents.SetVectorId(fragment.Id, vectorId);
         }
     }
 }

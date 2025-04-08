@@ -1,3 +1,5 @@
+using Domain.Model;
+
 namespace Domain.Service;
 
 public interface IDocumentStorageService
@@ -41,7 +43,7 @@ public interface IDocumentStorageService
     /// </summary>
     /// <param name="documentId">The document's unique ID.</param>
     /// <returns>List of fragments of the document.</returns>
-    Task<List<string>> GetDocumentFragments(Guid documentId);
+    Task<List<Fragment>> GetDocumentFragments(Guid documentId);
     
     
     Task<List<Guid>> GetDocumentFragmentIds(Guid documentId);

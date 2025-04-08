@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using Domain.Repository;
 using Domain.Service;
 using Infrastructure.Providers.Deepseek.Constant;
+using Infrastructure.Providers.DocumentStorage.Model;
 using RestSharp;
 
 namespace Infrastructure.Providers.DocumentStorage;
@@ -42,12 +43,18 @@ public class Client(string baseUrl) : IDocumentStorageService
         return documents.Select(document => document.Document.Id).ToList();
     }
 
-    public async Task<List<string>> GetDocumentFragments(Guid documentId)
+    public async Task<List<Domain.Model.Fragment>> GetDocumentFragments(Guid documentId)
     {
         var document = await _httpClient.GetFromJsonAsync<Model.FragmentWrapper>(
             $"/GetDocumentById?documentId={documentId}");
-        var fragments = document.Fragments;
-        return fragments.Select(fragment => fragment.Content).ToList();
+        return document.Fragments.Select(fragment =>
+            new Domain.Model.Fragment
+            {
+                Id = fragment.Id,
+                Content = fragment.Content,
+                DocumentId = fragment.DocumentId
+            }
+        ).ToList();
     }
 
     public async Task<List<Guid>> GetDocumentFragmentIds(Guid documentId)
@@ -58,7 +65,6 @@ public class Client(string baseUrl) : IDocumentStorageService
 
     public async Task SetVectorId(Guid fragmentId, Guid vectorId)
     {
-        var response =
-            await _httpClient.PostAsync($"/SetVectorId?fragmentId={fragmentId}&vectorId={vectorId}", null);
+        await _httpClient.PostAsync($"/UpdateFragmentVectorId?fragmentId={fragmentId}&vectorId={vectorId}", null);
     }
 }
