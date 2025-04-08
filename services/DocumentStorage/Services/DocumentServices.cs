@@ -174,6 +174,21 @@ namespace DocumentStorage.Services
                 }).FirstOrDefaultAsync();
         }
 
+        public async Task<string> GetFragmentByEmbeddedIdAsync(Guid embeddedId)
+        {
+            return await _context.Fragments
+                .Where(f => f.VectorId == embeddedId)
+                .Select(f => f.Content)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<string>> GetFragmentsByEmbeddedIdsAsync(List<Guid> embeddedIds)
+        {
+            return await _context.Fragments
+                .Where(f => embeddedIds.Contains((Guid)f.VectorId))
+                .Select(f => f.Content)
+                .ToListAsync();
+        }
 
         public async Task<bool> SetVectorIdAsync(Guid fragmentId, Guid vectorId)
         {
