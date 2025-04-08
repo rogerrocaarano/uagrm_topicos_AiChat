@@ -5,7 +5,7 @@ using Domain.Service;
 
 namespace Application.UseCase;
 
-public class AskLlm(ILlmChatService illm, IDocumentStorageRepository documents, IVectorStorageService embeddings)
+public class AskLlm(ILlmChatService illm, IDocumentStorageService documents, IVectorStorageService embeddings)
 {
     public async Task<Conversation> Execute(Conversation conversation)
     {
@@ -22,7 +22,7 @@ public class AskLlm(ILlmChatService illm, IDocumentStorageRepository documents, 
         var context = new List<Message>();
         foreach (var id in contextDbIds)
         {
-            var fragment = await documents.GetFragment(id);
+            var fragment = await documents.GetFragmentByEmbeddedId(id);
             context.Add(new Message
             {
                 Type = MessageType.Context,

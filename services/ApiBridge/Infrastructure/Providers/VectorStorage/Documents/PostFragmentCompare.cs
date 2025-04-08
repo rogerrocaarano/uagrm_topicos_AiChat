@@ -1,6 +1,9 @@
+using System.Text.Json.Serialization;
+
 namespace Infrastructure.Providers.VectorStorage.Documents;
 
-public record PostFragmentCompare(
-    string Fragment,
-    int MaxMatches
-);
+public class PostFragmentCompare
+{
+    [JsonPropertyName("fragment")] public string Fragment { get; set; }
+    [JsonPropertyName("max_matches")] public int MaxMatches { get; set; }
+}

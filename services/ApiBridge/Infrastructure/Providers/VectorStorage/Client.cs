@@ -28,16 +28,22 @@ public class Client : IDisposable, Domain.Service.IVectorStorageService
 
     public async Task<List<Guid>> GetSimilarEmbeddingIds(string content)
     {
-        // not implemented exception
-        throw new NotImplementedException();
-        // var jsonBody = new PostFragmentCompare(content, 5);
-        // var request = new RestRequest(Endpoint.FragmentCompare, Method.Post)
-        //     .AddHeader("Content-Type", "application/json")
-        //     .AddJsonBody(jsonBody);
-        //
-        // var response = await _client.PostAsync<ApiResponse>(request);
-        // var fragments = (List<Fragment>)response.Content;
-        // return fragments.Select(f => f.Id).ToList();
+        var jsonBody = new PostFragmentCompare
+        {
+            Fragment = content,
+            MaxMatches = 20
+        };
+        var request = new RestRequest(Endpoint.FragmentCompare, Method.Post)
+            .AddHeader("Content-Type", "application/json")
+            .AddJsonBody(jsonBody);
+        var response = await _client.PostAsync<Domain.Model.ApiResponse>(request);
+        var similarityResults = SortSimilarityResultsByScore((List<SimilarityResult>)response.Content);
+        return similarityResults.Select(result => result.FragmentId).ToList();
+    }
+
+    private List<SimilarityResult> SortSimilarityResultsByScore(List<SimilarityResult> similarityResults)
+    {
+        return similarityResults.OrderByDescending(result => result.Score).ToList();
     }
 
     public async Task<List<string>> GetFragmentsFromText(string content)
@@ -46,7 +52,7 @@ public class Client : IDisposable, Domain.Service.IVectorStorageService
         var request = new RestRequest(Endpoint.TextSplitter, Method.Post)
             .AddHeader("Content-Type", "application/json")
             .AddJsonBody(jsonBody);
-        
+
         var response = await _client.PostAsync<Domain.Model.ApiResponse>(request);
         var fragments = (List<string>)response.Content;
         return fragments;
