@@ -121,10 +121,10 @@ namespace DocumentStorage.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<DocumentJsonModel>> GetAllDocumentsAsync()
+          public async Task<List<DocumentModel>> GetAllDocumentsAsync()
         {
             return await _context.Documents
-                .Select(doc => new DocumentJsonModel
+                .Select(doc => new DocumentModel
                 {
                     Document = new DocumentData
                     {
@@ -132,15 +132,7 @@ namespace DocumentStorage.Services
                         Name = doc.Name,
                         Description = doc.Description,
                         UploadDateTime = doc.UploadDateTime.ToString()
-                    },
-                    Fragments = doc.Fragments.Select(frag => new FragmentJsonModel
-                    {
-                        Id = frag.Id.ToString(),
-                        VectorId = frag.VectorId.ToString(),
-                        Content = frag.Content,
-                        DocumentId = frag.DocumentId.ToString(),
-                        SequenceId = frag.SequenceId
-                    }).ToList()
+                    }
                 }).ToListAsync();
         }
 
