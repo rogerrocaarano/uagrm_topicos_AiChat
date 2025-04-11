@@ -11,7 +11,7 @@ public class Client(string baseUrl) : IDocumentStorageService
 {
     private readonly HttpClient _httpClient = new()
     {
-        BaseAddress = new Uri("http://localhost:5125")
+        BaseAddress = new Uri(baseUrl)
     };
 
     public async Task<string> GetFragment(Guid id)
