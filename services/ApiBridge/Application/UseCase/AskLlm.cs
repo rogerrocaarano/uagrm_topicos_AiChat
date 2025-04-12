@@ -1,6 +1,5 @@
 using Domain.Constant;
 using Domain.Model;
-using Domain.Repository;
 using Domain.Service;
 
 namespace Application.UseCase;
