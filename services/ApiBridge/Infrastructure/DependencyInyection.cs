@@ -1,8 +1,5 @@
 using Application.UseCase;
-using Domain.Repository;
 using Domain.Service;
-using Infrastructure.Providers.DocumentRepository;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
