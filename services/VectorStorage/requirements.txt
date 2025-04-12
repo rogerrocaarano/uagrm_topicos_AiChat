@@ -1,0 +1,7 @@
+chromadb==0.6.3
+dependency_injector==4.46.0
+fastapi==0.115.12
+pydantic==2.11.3
+sentence_transformers==4.0.1
+spacy==3.7.2
+blis==0.7.9
