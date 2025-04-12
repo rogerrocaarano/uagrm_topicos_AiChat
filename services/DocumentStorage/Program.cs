@@ -12,6 +12,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
+builder.WebHost.UseUrls("http://0.0.0.0:5000");
 
 builder.Services.AddSwaggerGen(c =>
 {

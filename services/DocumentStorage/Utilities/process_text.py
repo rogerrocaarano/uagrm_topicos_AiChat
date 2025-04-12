@@ -1,4 +1,4 @@
-﻿import spacy
+import spacy
 import os
 import uuid
 import json
@@ -37,7 +37,8 @@ def process_document(file_path):
         "fragments": fragments
     }
 
-folder = "C:\\Users\\rogerroca\\code\\uagrm_topicos_AiChat\\services\\DocumentStorage\\DocPenales"
+# TODO: dejar de hardcodear la ruta y retirar del repositorio los documentos
+folder = "/src/DocPenales/" 
 
 documents = []
 for file_name in os.listdir(folder):

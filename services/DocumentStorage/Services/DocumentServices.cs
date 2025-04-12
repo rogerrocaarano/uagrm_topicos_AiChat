@@ -16,8 +16,7 @@ namespace DocumentStorage.Services
         }
 
 
-        private readonly string _pythonPath = Environment.GetEnvironmentVariable("PYTHON_PATH") ?? 
-                                              throw new InvalidOperationException("PYTHON_PATH environment variable is not set.");
+        private readonly string _pythonPath = Environment.GetEnvironmentVariable("PYTHON_PATH") ?? "python";
 
         private readonly string _scriptPath =
             Path.Combine(Directory.GetCurrentDirectory(), "utilities", "process_text.py");
