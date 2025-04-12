@@ -1,2 +1,12 @@
 GET http://localhost:5285/system/db/vector-storage/build
 
+###
+POST http://localhost:5285/app/ask-llm
+Content-Type: application/json
+
+{
+  "Question": {
+    "Type": "user-message",
+    "Text": "Cuáles son los límites de velocidad en carretera?"
+  }
+}

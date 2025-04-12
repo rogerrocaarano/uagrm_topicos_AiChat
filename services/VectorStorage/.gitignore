@@ -1,1 +1,3 @@
-/Infrastructure/Persistence/chroma_db/
+
+# ignore any __pycache__ directories and their contents
+__pycache__/

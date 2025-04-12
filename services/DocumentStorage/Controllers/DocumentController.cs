@@ -54,6 +54,21 @@ namespace DocumentStorage.Controllers
             return Ok(fragment);
         }
 
+        [HttpGet("GetFragmentByEmbeddedId")]
+        public async Task<IActionResult> GetFragmentByEmbeddedId(Guid embeddedId)
+        {
+            var content = await _documentService.GetFragmentByEmbeddedIdAsync(embeddedId);
+            if (content == null) return NotFound("Fragmento no encontrado.");
+            return Ok(content);
+        }
+
+        [HttpGet("GetFragmentsByEmbeddedIds")]
+        public async Task<IActionResult> GetFragmentsByEmbeddedIds(List<Guid> embeddedIds)
+        {
+            var fragments = await _documentService.GetFragmentsByEmbeddedIdsAsync(embeddedIds);
+            return Ok(fragments);
+        }
+
         [HttpPost]
         [Route("UpdateFragmentVectorId")]
         public async Task<IActionResult> UpdateFragmentVectorIdAsync(Guid fragmentId, Guid vectorId)

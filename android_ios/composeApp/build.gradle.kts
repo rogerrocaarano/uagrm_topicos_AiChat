@@ -54,6 +54,7 @@ kotlin {
             implementation(libs.markdown.renderer)
             implementation(libs.markdown.renderer.m3)
             implementation(compose.materialIconsExtended)
+            implementation(libs.kotlinx.datetime)
         }
     }
 

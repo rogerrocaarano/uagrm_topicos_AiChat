@@ -1,0 +1,48 @@
+version: "3.8"
+services:
+  api:
+    build:
+      context: ./services/ApiBridge
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./services/ApiBridge:/src
+    command: sh -c 'dotnet run --project /src/Presentation/Presentation.csproj'
+    ports:
+      - "8000:5000"
+    environment:
+      - Services__DocumentStorage__BaseUrl=http://documents:5000
+      - Services__VectorStorage__BaseUrl=http://embedding:5000
+      - Services__LlmChat__ApiKey=${DEEPSEEK_API_KEY}
+
+  embedding:
+    build:
+      context: ./services/VectorStorage
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./services/VectorStorage:/src
+      - ./.data/chroma:/data/chroma
+    ports:
+      - "8001:5000"
+
+  documents:
+    build:
+      context: ./services/DocumentStorage
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./services/DocumentStorage:/src
+    command: > 
+      sh -c "/src/scripts/run.sh"
+    depends_on:
+      - documents-db
+    ports:
+      - "8002:5000"
+    environment:
+      - ConnectionStrings__DefaultConnection=${DOCUMENT_STORAGE_CONNECTION_STRING}
+
+  documents-db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - .data/DocumentStorage:/var/lib/postgresql/data

@@ -36,8 +36,8 @@ public class Client : IDisposable, Domain.Service.IVectorStorageService
         var request = new RestRequest(Endpoint.FragmentCompare, Method.Post)
             .AddHeader("Content-Type", "application/json")
             .AddJsonBody(jsonBody);
-        var response = await _client.PostAsync<Domain.Model.ApiResponse>(request);
-        var similarityResults = SortSimilarityResultsByScore((List<SimilarityResult>)response.Content);
+        var response = await _client.PostAsync<FragmentCompareResponse>(request);
+        var similarityResults = SortSimilarityResultsByScore(response.Content);
         return similarityResults.Select(result => result.FragmentId).ToList();
     }
 
